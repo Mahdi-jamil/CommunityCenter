@@ -29,7 +29,7 @@ public class Comment {
     @Column(name = "comment_id")
     private Long commentId;
 
-    private String body; // todo indicate body type
+    private String body;
 
     @UpdateTimestamp
     private LocalDateTime lastUpdate = LocalDateTime.now(); // todo check if will updates
@@ -37,24 +37,15 @@ public class Comment {
     private Integer votes = 0;
 
     @ManyToOne
-    @JoinColumn(
-            name = "user_id",
-            referencedColumnName = "userId"
-    )
+    @JoinColumn(name = "user_id")
     private User author;
 
     @ManyToOne
-    @JoinColumn(
-            name = "post_id",
-            referencedColumnName = "postId"
-    )
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne
-    @JoinColumn(
-            name = "parent_comment_id",
-            referencedColumnName = "commentId"
-    )
+    @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
 

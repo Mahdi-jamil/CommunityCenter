@@ -30,29 +30,23 @@ public class Post {
 
     private String title;
 
-    private String body; //  todo add image
+    private String body;
 
     private Integer votes = 0;
 
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate; // todo test as comment
+
     @ManyToOne
-    @JoinColumn(
-            name = "author_id",
-            referencedColumnName = "userId"
-    )
+    @JoinColumn(name = "author_id")
     private User author;
 
     @ManyToOne
-    @JoinColumn(
-            name = "posted_in_community_id",
-            referencedColumnName = "communityId"
-    )
+    @JoinColumn(name = "posted_in_community_id")
     private Community community;
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
-
-    @UpdateTimestamp
-    private LocalDateTime lastUpdate;
 
     @PreUpdate
     protected void onUpdate() {

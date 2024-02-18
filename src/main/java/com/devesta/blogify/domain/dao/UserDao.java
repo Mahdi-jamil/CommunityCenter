@@ -20,6 +20,5 @@ public class UserDao {
     private String username;
     private String email;
     private LocalDate createdDate;
-    private List<Community> communitiesSubscribedTo;// todo
     private Role role;
 }

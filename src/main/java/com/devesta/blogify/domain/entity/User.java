@@ -25,13 +25,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-@ToString(
-        exclude =
-                {
-                        "createdCommunities", "joinedCommunities",
-                        "postsAuthored", "authoredComments"
-                }
-)
+@ToString(exclude = "joinedCommunities")
 public class User implements UserDetails {
 
     @Id
@@ -69,24 +63,14 @@ public class User implements UserDetails {
     @JoinTable(
             name = "user_community",
             joinColumns = @JoinColumn(
-                    name = "user_id",
-                    referencedColumnName = "userId"
+                    name = "user_id"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "community_id",
-                    referencedColumnName = "communityId"
+                    name = "community_id"
             )
     )
     private List<Community> joinedCommunities;
 
-    @OneToMany(mappedBy = "createdBy")
-    private List<Community> createdCommunities;
-
-    @OneToMany(mappedBy = "author")
-    private List<Post> postsAuthored;
-
-    @OneToMany(mappedBy = "author")
-    private List<Comment> authoredComments;
 
     @Enumerated(value = EnumType.STRING)
     private Role role;

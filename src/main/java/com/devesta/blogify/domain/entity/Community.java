@@ -31,8 +31,7 @@ public class Community {
 
     @ManyToOne
     @JoinColumn(
-            name = "creator_id",
-            referencedColumnName = "userId"
+            name = "creator_id"
     )
     private User createdBy;
 
@@ -40,12 +39,10 @@ public class Community {
     @JoinTable(
             name = "community_tag",
             joinColumns = @JoinColumn(
-                    name = "community_id",
-                    referencedColumnName = "communityId"
+                    name = "community_id"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "tag_id",
-                    referencedColumnName = "tagId"
+                    name = "tag_id"
             )
     )
     private List<Tag> tags;

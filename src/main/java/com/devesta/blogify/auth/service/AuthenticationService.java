@@ -40,7 +40,6 @@ public class AuthenticationService {
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .email(registerRequest.getEmail())
-                .createdCommunities(new ArrayList<>())// todo
                 .role(Role.USER)
                 .build();
 

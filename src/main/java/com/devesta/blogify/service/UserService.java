@@ -36,7 +36,6 @@ public class UserService {
                 , user1.getUsername()
                 , user1.getEmail()
                 , user1.getCreatedDate()
-                , user1.getCreatedCommunities()// todo
                 , user1.getRole());
     }
 
