@@ -1,0 +1,15 @@
+// paging
+PageRequest twoPageEachThreeRecord = PageRequest.of(2, 3);
+PageRequest twoPageEachThreeRecordSortByUsername =
+    PageRequest.of(2, 3, Sort.by("username").ascending());
+
+Page<User> repositoryAll = userRepository.findAll(
+                twoPageEachThreeRecord
+);
+List<User> users = repositoryAll.getContent();
+
+
+or can be custom query with pageRequest
+In UserRepository :
+
+    -Page<User> findByTitle(String title,PageRequest pageRequest)
