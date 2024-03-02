@@ -24,9 +24,19 @@ public class SecurityConfig {
 
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/api/auth/**",
+            "/v3/api-docs/**",
+            "/v3/api-docs.yaml",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/hello",
+            "/api/accessDenied"
+    };
+
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)  throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((sessionManagement) -> {
@@ -35,7 +45,7 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/api/auth/**", "/hello").permitAll()
+                                .requestMatchers(AUTH_WHITELIST).permitAll()
                                 .requestMatchers("/hello/t1").hasAnyAuthority("USER")
                                 .requestMatchers("/hello/t2").hasAnyAuthority("ADMIN")
                                 .anyRequest().authenticated()
@@ -44,6 +54,8 @@ public class SecurityConfig {
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling
                                 .authenticationEntryPoint(authenticationEntryPoint)
+                                .accessDeniedHandler(new CustomAccessDeniedHandler())
+                                .accessDeniedPage("/api/accessDenied")// todo
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -1,6 +1,6 @@
 package com.devesta.blogify.config;
 
-import com.devesta.blogify.repository.UserRepository;
+import com.devesta.blogify.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ public class AppConfig {
     private final UserRepository userRepository;
 
     @Bean
-    public UserDetailsService userDetailsManager() {
+    public UserDetailsService userDetailsService() {
         return username -> userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found with username: " + username));
     }
@@ -29,7 +29,7 @@ public class AppConfig {
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsManager());
+        provider.setUserDetailsService(userDetailsService());
         return provider;
     }
 
@@ -42,5 +42,4 @@ public class AppConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

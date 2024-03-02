@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
         logger.error("Unauthorized access - {}", authException.getMessage());
 
         Map<String, Object> errorDetails = new HashMap<>();
-        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("timestamp", new Date());
         errorDetails.put("status", HttpStatus.UNAUTHORIZED.value());
         errorDetails.put("error", "Unauthorized");
         errorDetails.put("message", "You are not authorized to access this resource");

@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 
-@SpringBootApplication()
+@SpringBootApplication
 public class CommunityCenterApplication {
 
 	public static void main(String[] args) {

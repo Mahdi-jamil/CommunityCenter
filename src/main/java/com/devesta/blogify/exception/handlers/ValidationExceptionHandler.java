@@ -21,7 +21,7 @@ public class ValidationExceptionHandler {
 
     Logger logger = LoggerFactory.getLogger(ValidationExceptionHandler.class);
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler(ConstraintViolationException.class) //  todo Change return to Error msg
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleValidationException(ConstraintViolationException exception) {
         List<String> errors = new ArrayList<>();
