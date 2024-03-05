@@ -2,26 +2,45 @@ package com.devesta.blogify.post;
 
 import com.devesta.blogify.comment.domain.Comment;
 import com.devesta.blogify.post.domain.Post;
-import com.devesta.blogify.post.domain.dto.PostDetailDto;
+import com.devesta.blogify.post.domain.ListPostDto;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    
-    @Query("SELECT NEW com.devesta.blogify.post.domain.dto.PostDetailDto(" +
+    @Query("select p from Post p where p.community.communityId = ?1")
+    List<Post> findByCommunity_CommunityId(Long communityId);
+
+    @Query("SELECT NEW com.devesta.blogify.post.domain.ListPostDto(" +
             "p.postId, p.author.username, p.title, p.body, " +
             "p.votes, p.lastUpdate) " +
             "FROM Post p " +
             "WHERE p.postId = :id")
-    Optional<PostDetailDto> findPostDetail(@Param("id") Long id);
+    Optional<ListPostDto> findPostDetail(@Param("id") Long id);
 
-    @Query("select p from Post p where p.author.username = ?1")
-    List<Post> findByAuthor_Username(String username, Sort sort);
+    @Query("SELECT c FROM Comment c WHERE c.post.postId = ?1")
+    List<Comment> findCommentsByPostId(Long postId);
+
+
+    List<Post> findByAuthor_userId(Long id, Sort sort);
+
+    @Transactional
+    @Modifying
+    @Query("update Post p set p.votes = p.votes + 1 where p.postId = ?1")
+    int updateVotesByPostIdPlus(Long postId);
+
+    @Transactional
+    @Modifying
+    @Query("update Post p set p.votes = p.votes - 1 where p.postId = ?1 and p.votes > 0")
+    int updateVotesByPostIdMinus(Long postId);
+
+
 
 
 }

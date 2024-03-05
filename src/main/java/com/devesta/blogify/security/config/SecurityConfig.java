@@ -1,6 +1,7 @@
 package com.devesta.blogify.security.config;
 
 import com.devesta.blogify.security.jwt.JwtAuthFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -19,24 +25,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
-
     private final AuthenticationProvider provider;
-
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final PasswordEncoder passwordEncoder;
 
     private static final String[] AUTH_WHITELIST = {
-            "/api/auth/**",
+            "/api/authentication/**",
             "/v3/api-docs/**",
             "/v3/api-docs.yaml",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/hello",
-            "/api/accessDenied"
+            "/api/accessDenied",
+            "/h2-console/**"
     };
 
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)  throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((sessionManagement) -> {
@@ -46,41 +51,46 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers(AUTH_WHITELIST).permitAll()
-                                .requestMatchers("/hello/t1").hasAnyAuthority("USER")
-                                .requestMatchers("/hello/t2").hasAnyAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .authenticationProvider(provider)
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling
-                                .authenticationEntryPoint(authenticationEntryPoint)
-                                .accessDeniedHandler(new CustomAccessDeniedHandler())
-                                .accessDeniedPage("/api/accessDenied")// todo
+                                .accessDeniedHandler(accessDeniedHandler())
+                                .accessDeniedPage("/accessDenied.html")
+//                                .authenticationEntryPoint(authenticationEntryPoint)
+//                                .authenticationEntryPoint(
+//                                        (request, response, authException)
+//                                                -> response.sendError(
+//                                                HttpServletResponse.SC_UNAUTHORIZED,
+//                                                authException.getLocalizedMessage()
+//                                        )
+//                                )
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+    @Bean
+    public CustomAccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
 
-    /*  For test purposes
     @Bean
     public UserDetailsService userDetailsManager() {
-                UserDetails user = User.builder()
+        UserDetails user = User.builder()
                 .username("user")
-                .password(passwordEncoder().encode("root"))
-                .roles("user")
+                .password(passwordEncoder.encode("root123"))
+                .roles("USER")
                 .build();
 
         UserDetails admin = User.builder()
                 .username("admin")
-                .password(passwordEncoder().encode("root"))
-                .roles("admin")
+                .password(passwordEncoder.encode("root123"))
+                .roles("ADMIN")
                 .build();
 
         return new InMemoryUserDetailsManager(user, admin);
     }
-   */
-
-
 }

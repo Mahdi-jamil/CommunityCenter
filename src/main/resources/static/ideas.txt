@@ -1,15 +1,46 @@
-// paging
-PageRequest twoPageEachThreeRecord = PageRequest.of(2, 3);
-PageRequest twoPageEachThreeRecordSortByUsername =
-    PageRequest.of(2, 3, Sort.by("username").ascending());
+Community:
+    public - private - restricted types of community
+    +18 or not (boolean)
+    welcome message(boolean with if true add one)
 
-Page<User> repositoryAll = userRepository.findAll(
-                twoPageEachThreeRecord
-);
-List<User> users = repositoryAll.getContent();
+User:
+    add profile img
+    add about section
+    add instagram link
+
+Posts:
+    can upload img
+
+Features:
+    1-Add community room for live chatting
 
 
-or can be custom query with pageRequest
-In UserRepository :
 
-    -Page<User> findByTitle(String title,PageRequest pageRequest)
+
+
+Postgres :
+    Trigger
+        1-Create a trigger function to update the number_of_members column:
+
+           CREATE OR REPLACE FUNCTION update_community_members()
+           RETURNS TRIGGER AS $$
+           BEGIN
+               IF TG_OP = 'INSERT' THEN
+                   UPDATE community
+                   SET number_of_members = number_of_members + 1
+                   WHERE community_id = NEW.community_id;
+               ELSIF TG_OP = 'DELETE' THEN
+                   UPDATE community
+                   SET number_of_members = number_of_members - 1
+                   WHERE community_id = OLD.community_id;
+               END IF;
+               RETURN NULL;
+           END;
+           $$ LANGUAGE plpgsql;
+
+           Create a trigger for the user_community table:
+
+           CREATE TRIGGER update_community_members_trigger
+           AFTER INSERT OR DELETE ON user_community
+           FOR EACH ROW
+           EXECUTE FUNCTION update_community_members();

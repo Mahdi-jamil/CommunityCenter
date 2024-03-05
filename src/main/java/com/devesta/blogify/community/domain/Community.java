@@ -5,6 +5,7 @@ import com.devesta.blogify.post.domain.Post;
 import com.devesta.blogify.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.List;
 
@@ -28,18 +29,19 @@ public class Community {
     @Column(name = "community_id")
     private Long communityId;
 
+    @Column(unique = true)
     private String name;
 
     private String description;
 
-    @Column(name = "number_of_members" , columnDefinition = "INT DEFAULT 0")
+    @Column(name = "number_of_members" , columnDefinition = "INT DEFAULT 1")
     private Integer numberOfMembers;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private User createdBy;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "community_tag",
             joinColumns = @JoinColumn(
@@ -51,7 +53,7 @@ public class Community {
     )
     private List<Tag> tags;
 
-    @OneToMany(mappedBy = "community")
+    @OneToMany(mappedBy = "community" , cascade = CascadeType.REMOVE , orphanRemoval = true)
     private List<Post> posts;
 
 }

@@ -1,6 +1,6 @@
-package com.devesta.blogify.post.domain.dto;
+package com.devesta.blogify.post.domain;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record ListPostDto(
         Long id,
@@ -8,5 +8,5 @@ public record ListPostDto(
         String title,
         String body,
         Integer votes,
-        LocalDateTime lastUpdate) {
+        LocalDate lastUpdate) {
 }

@@ -1,14 +1,15 @@
-package com.devesta.blogify.auth.service;
+package com.devesta.blogify.authentication.service;
 
-import com.devesta.blogify.auth.payload.AuthenticationResponse;
-import com.devesta.blogify.auth.payload.LoginRequest;
-import com.devesta.blogify.auth.payload.RegisterRequest;
+import com.devesta.blogify.authentication.payload.AuthenticationResponse;
+import com.devesta.blogify.authentication.payload.LoginRequest;
+import com.devesta.blogify.authentication.payload.RegisterRequest;
 import com.devesta.blogify.exception.exceptions.EmailAlreadyExistsException;
 import com.devesta.blogify.exception.exceptions.UserAlreadyExistsException;
 import com.devesta.blogify.security.jwt.JwtService;
 import com.devesta.blogify.user.UserRepository;
 import com.devesta.blogify.user.domain.Role;
 import com.devesta.blogify.user.domain.User;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,6 +42,7 @@ public class AuthenticationService {
                 .build();
 
         userRepository.save(user);
+
         String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -55,6 +57,7 @@ public class AuthenticationService {
         );
         User user = userRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+
         String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)

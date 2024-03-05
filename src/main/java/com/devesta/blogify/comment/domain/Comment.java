@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -34,8 +35,7 @@ public class Comment {
     private String body;
 
     @UpdateTimestamp
-    @Builder.Default
-    private LocalDateTime lastUpdate = LocalDateTime.now(); // todo check if will updates
+    private LocalDateTime lastUpdate;
 
     @Builder.Default
     private Integer votes = 0;
@@ -47,6 +47,9 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> childComments;  // todo check not run and work
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")

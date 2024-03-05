@@ -1,6 +1,5 @@
 package com.devesta.blogify.post.domain;
 
-import com.devesta.blogify.post.domain.dto.ListPostDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

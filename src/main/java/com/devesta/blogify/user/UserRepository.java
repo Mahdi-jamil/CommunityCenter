@@ -1,12 +1,12 @@
 package com.devesta.blogify.user;
 
+import com.devesta.blogify.community.domain.Community;
 import com.devesta.blogify.user.domain.User;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,23 +25,30 @@ public interface UserRepository extends JpaRepository<User, Long> {
             where joinedCommunities.communityId = ?1""")
     List<User> findByJoinedCommunities_CommunityId(Long communityId);
 
-    @Modifying
-    @Query(
-            value = "delete from user_community where community_id = :cid and user_id = :uid;",
-            nativeQuery = true
-    )
-    Long deleteUserFromCommunity(Long cid, Long uid);
+    @Query("select u.joinedCommunities from User u where u.userId = ?1")
+    List<Community> userCommunities(Long uid);
 
     @Modifying
-    @Transactional // todo make above service method
+    @Transactional
     @Query(
-            value = "update users set email = :email where id = :uid",
+            value = "insert into user_community (user_id, community_id) values (?1, ?2)",
             nativeQuery = true
     )
-    int updateEmail(
-            @Param("email") String emial,
-            @Param("uid") Long id
-    );
+    void joinCommunity(Long uid, Long cid);
+
+    @Modifying
+    @Transactional
+    @Query(
+            value = "delete from user_community where user_id = ?1 and community_id = ?2",
+            nativeQuery = true
+    )
+    void leaveCommunity(Long uid, Long cid);
+
+    @Query(
+            value = "select user_id from user_community where user_id = ?1 and community_id = ?2",
+            nativeQuery = true
+    )
+    Long alreadyJoined(Long uid, Long cid);
 
 }
 

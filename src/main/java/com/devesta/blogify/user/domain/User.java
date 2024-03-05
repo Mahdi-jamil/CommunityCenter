@@ -41,7 +41,6 @@ public class User implements UserDetails {
     private String username;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters long")
     @Pattern(
             regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=\\S+$).{6,}$",
             message = "Password must be at least 6 characters long, contain at least one letter and one digit, and no whitespaces."
@@ -51,10 +50,11 @@ public class User implements UserDetails {
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     private String email;
+
     @CreationTimestamp
     private LocalDate createdDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY )
     @JoinTable(
             name = "user_community",
             joinColumns = @JoinColumn(
@@ -65,7 +65,6 @@ public class User implements UserDetails {
             )
     )
     private List<Community> joinedCommunities;
-
 
     @Enumerated(value = EnumType.STRING)
     private Role role;

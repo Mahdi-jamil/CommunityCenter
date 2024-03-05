@@ -1,8 +1,7 @@
 package com.devesta.blogify.exception.handlers;
 
 import com.devesta.blogify.exception.ErrorMessage;
-import com.devesta.blogify.exception.exceptions.CommunityNotFoundException;
-import com.devesta.blogify.exception.exceptions.UserNotFoundException;
+import com.devesta.blogify.exception.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorMessage> usrNotFoundExceptionHandler(UserNotFoundException exception) {
+    public ResponseEntity<ErrorMessage> userNotFoundExceptionHandler(UserNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
         logger.info("{}", message);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
@@ -32,6 +31,38 @@ public class GlobalExceptionHandler {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
         logger.info("{}", message);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
+
+    @ExceptionHandler(PostNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorMessage> postNotFoundExceptionHandler(PostNotFoundException exception) {
+        ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
+        logger.info("{}", message);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorMessage> commentNotFoundExceptionHandler(CommentNotFoundException exception) {
+        ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
+        logger.info("{}", message);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
+
+    @ExceptionHandler(CommunityNameExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ErrorMessage> communityNameExistsExceptionHandler(CommunityNameExistException exception) {
+        ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
+        logger.info("{}", message);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+    }
+
+    @ExceptionHandler(UserNotJoinedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ErrorMessage> userNotJoinedExceptionHandler(UserNotJoinedException exception) {
+        ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
+        logger.info("{}", message);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message);
     }
 
 }

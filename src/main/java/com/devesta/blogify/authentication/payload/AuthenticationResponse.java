@@ -1,4 +1,4 @@
-package com.devesta.blogify.auth.payload;
+package com.devesta.blogify.authentication.payload;
 
 import lombok.*;
 

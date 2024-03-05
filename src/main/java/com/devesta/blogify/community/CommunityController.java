@@ -1,41 +1,154 @@
 package com.devesta.blogify.community;
 
-import com.devesta.blogify.community.domain.dto.FullDetailCommunityDto;
+import com.devesta.blogify.community.domain.dto.CommunityDto;
 import com.devesta.blogify.community.domain.dto.ListCommunityDto;
-import com.devesta.blogify.user.UserRepository;
+import com.devesta.blogify.post.domain.ListPostDto;
+import com.devesta.blogify.post.domain.PostDto;
 import com.devesta.blogify.user.domain.UserDto;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1/community")
+@RequestMapping("/api/v1/communities")
 public class CommunityController {
 
     private final CommunityService communityService;
 
-    @GetMapping("/{cid}/users")
-    public ResponseEntity<List<UserDto>> getUsersInCommunity(@PathVariable Long cid) {
-        return new ResponseEntity<>(communityService.getUsersInCommunity(cid), HttpStatus.OK);
-    }
-
-    @GetMapping("{cid}")
-    public ResponseEntity<FullDetailCommunityDto> getFullDetailedCommunity(@PathVariable Long cid) {
-        return new ResponseEntity<>(communityService.detailCommunityDto(cid), HttpStatus.OK);
-    }
-
+    /**
+     * Retrieves a list of all communities.
+     *
+     * @return ResponseEntity<List<ListCommunityDto>> List of communities.
+     */
     @GetMapping
     public ResponseEntity<List<ListCommunityDto>> getAllCommunities() {
         return new ResponseEntity<>(communityService.getListOfCommunities(), HttpStatus.OK);
     }
 
+    /**
+     * Retrieves detailed information about a specific community.
+     *
+     * @param cid ID of the community.
+     * @return ResponseEntity<ListCommunityDto> Detailed information about the community.
+     */
+    @GetMapping("{cid}")
+    public ResponseEntity<ListCommunityDto> getFullDetailedCommunity(@PathVariable Long cid) {
+        return new ResponseEntity<>(communityService.detailCommunityDto(cid), HttpStatus.OK);
+    }
+
+    /**
+     * Creates a new community.
+     *
+     * @param communityDto      Details of the community to be created.
+     * @param authentication    Authentication object for the user creating the community.
+     * @return ResponseEntity<CommunityDto> Details of the newly created community.
+     */
+    @PostMapping
+    public ResponseEntity<CommunityDto> createNewCommunity(
+            @RequestBody @Valid CommunityDto communityDto,
+            Authentication authentication) {
+        return new ResponseEntity<>(communityService.addCommunity(communityDto, authentication), HttpStatus.CREATED);
+    }
+
+    /**
+     * Retrieves a list of members in a specific community.
+     *
+     * @param cid ID of the community.
+     * @return ResponseEntity<List<UserDto>> List of members in the community.
+     */
+    @GetMapping("/{cid}/members")
+    public ResponseEntity<List<UserDto>> getUsersInCommunity(@PathVariable Long cid) {
+        return new ResponseEntity<>(communityService.getUsersInCommunity(cid), HttpStatus.OK);
+    }
+
+    /**
+     * Retrieves posts within a community.
+     *
+     * @param cid ID of the community.
+     * @return ResponseEntity<List<ListPostDto>> List of posts in the community.
+     */
+    @GetMapping("{cid}/posts")
+    public ResponseEntity<List<ListPostDto>> getCommunityPosts(@PathVariable Long cid) {
+        return new ResponseEntity<>(communityService.getCommunityPosts(cid), HttpStatus.OK);
+    }
+
+    /**
+     * Adds a post to a community.
+     *
+     * @param cid              ID of the community.
+     * @param postDto          Details of the post to be added.
+     * @param authentication   Authentication object for the user adding the post.
+     * @return ResponseEntity<ListPostDto> Details of the added post.
+     */
+    @PostMapping("{cid}/posts")
+    public ResponseEntity<ListPostDto> addPostToCommunity(
+            @PathVariable Long cid,
+            @RequestBody PostDto postDto,
+            Authentication authentication
+    ) {
+        return new ResponseEntity<>(communityService.addPost(cid, postDto, authentication), HttpStatus.OK);
+    }
+
+    /**
+     * Retrieves a list of communities by tag.
+     *
+     * @param tagName Tag name for filtering communities.
+     * @return ResponseEntity<List<ListCommunityDto>> List of communities filtered by tag.
+     */
     @GetMapping("tags/{tagName}")
     public ResponseEntity<List<ListCommunityDto>> getAllCommunitiesByTag(@PathVariable String tagName) {
         return new ResponseEntity<>(communityService.getListOfCommunitiesByTag(tagName), HttpStatus.OK);
     }
 
+    /**
+     * Allows a user to join a community.
+     *
+     * @param cid              ID of the community.
+     * @param authentication   Authentication object for the user joining the community.
+     * @return ResponseEntity<Void> Response indicating the success of the operation.
+     */
+    @PostMapping("/{cid}/join")
+    public ResponseEntity<Void> joinCommunity(
+            @PathVariable Long cid,
+            Authentication authentication
+    ) {
+        communityService.joinCommunity(cid, authentication);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Allows a user to leave a community.
+     *
+     * @param cid              ID of the community.
+     * @param authentication   Authentication object for the user leaving the community.
+     * @return ResponseEntity<Void> Response indicating the success of the operation.
+     */
+    @DeleteMapping("/{cid}/leave")
+    public ResponseEntity<Void> removeUserFromCommunity(
+            @PathVariable Long cid,
+            Authentication authentication
+    ) {
+        communityService.leaveCommunity(cid, authentication);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Deletes a community.
+     *
+     * @param cid              ID of the community.
+     * @param authentication   Authentication object for the user deleting the community.
+     * @return ResponseEntity<Void> Response indicating the success of the operation.
+     */
+    @DeleteMapping("{cid}")
+    public ResponseEntity<Void> deleteCommunity(
+            @PathVariable Long cid,
+            Authentication authentication) {
+        communityService.deleteCommunity(cid, authentication);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
