@@ -58,11 +58,19 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotJoinedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorMessage> userNotJoinedExceptionHandler(UserNotJoinedException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
         logger.info("{}", message);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
+
+    @ExceptionHandler(UserAlreadyJoinedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> userAlreadyJoinedExceptionHandler(UserAlreadyJoinedException exception) {
+        ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
+        logger.info("{}", message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 
 }

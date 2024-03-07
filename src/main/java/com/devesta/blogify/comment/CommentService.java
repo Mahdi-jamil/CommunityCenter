@@ -6,13 +6,16 @@ import com.devesta.blogify.comment.domain.CommentDto;
 import com.devesta.blogify.comment.domain.CommentMapper;
 import com.devesta.blogify.exception.exceptions.CommentNotFoundException;
 import com.devesta.blogify.exception.exceptions.PostNotFoundException;
+import com.devesta.blogify.exception.exceptions.UnauthorizedAccessException;
 import com.devesta.blogify.post.PostRepository;
 import com.devesta.blogify.user.domain.User;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,8 +33,8 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    public List<CommentDto> getAllChildComments(Long commentID) {
-        return commentRepository.findByParentComment_CommentId(commentID)
+    public List<CommentDto> getAllRepliesToComment(Long pid, Long commentID) {
+        return commentRepository.findByPost_PostIdAndParentComment_CommentId(pid, commentID)
                 .stream()
                 .map(commentMapper.INSTANCE::toCommentDto)
                 .collect(Collectors.toList());
@@ -67,18 +70,32 @@ public class CommentService {
         return commentMapper.toCommentDto(commentRepository.save(comment));
     }
 
-    public List<CommentDto> getAllRepliesToComment(Long pid, Long commentId) {
-        return null;
+    public CommentDto getCommentById(Long commentId) {
+        return commentRepository.findById(commentId).map(commentMapper::toCommentDto)
+                .orElseThrow(() -> new PostNotFoundException("post not found to comment"));
     }
 
-    public CommentDto getCommentById(Long pid, Long commentId) {
-        return null;
+    public void deleteCommentById(Long commentId, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        Optional<User> owner = commentRepository.findUserByCommentId(commentId);
+
+        if (owner.isPresent() && owner.get().equals(user)) {
+            commentRepository.deleteById(commentId);
+            return;
+        }
+        throw new UnauthorizedAccessException("User is not authorized to delete this comment");
     }
 
-    public void deleteCommentById(Long pid, Long commentId, Authentication authentication) {
-    }
+    public CommentDto updateCommentById(Long commentId, CommentBody body, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        Optional<User> owner = commentRepository.findUserByCommentId(commentId);
 
-    public CommentDto updateCommentById(Long pid, Long commentId, CommentBody body, Authentication authentication) {
-        return null;
+        if (owner.isPresent() && owner.get().equals(user)) {
+            Comment comment = commentRepository.findById(commentId)
+                    .orElseThrow(() -> new PostNotFoundException("post not found to comment"));
+            comment.setBody(body.body());
+            return commentMapper.toCommentDto(commentRepository.save(comment));
+        }
+        throw new UnauthorizedAccessException("User is not authorized to update this comment");
     }
 }

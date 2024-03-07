@@ -4,9 +4,7 @@ import com.devesta.blogify.community.domain.Community;
 import com.devesta.blogify.community.domain.dto.CommunityDto;
 import com.devesta.blogify.community.domain.dto.ListCommunityDto;
 import com.devesta.blogify.community.domain.mapper.ListCommunityMapper;
-import com.devesta.blogify.exception.exceptions.CommunityNameExistException;
-import com.devesta.blogify.exception.exceptions.CommunityNotFoundException;
-import com.devesta.blogify.exception.exceptions.UserNotJoinedException;
+import com.devesta.blogify.exception.exceptions.*;
 import com.devesta.blogify.post.PostRepository;
 import com.devesta.blogify.post.domain.ListPostDto;
 import com.devesta.blogify.post.domain.ListPostMapper;
@@ -20,7 +18,6 @@ import com.devesta.blogify.user.domain.User;
 import com.devesta.blogify.user.domain.UserDto;
 import com.devesta.blogify.user.domain.UserMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -104,6 +101,7 @@ public class CommunityService {
                 uniqueTags.add(tagRepository.save(newTag));
             }
         }
+
         community.setTags(uniqueTags);
         Community saved = communityRepository.save(community);
 
@@ -116,9 +114,9 @@ public class CommunityService {
 
     public void joinCommunity(Long cid, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        if (userRepository.alreadyJoined(user.getUserId(), cid) != null) {
-            return;
-        }
+        if (userRepository.alreadyJoined(user.getUserId(), cid) != null)
+            throw new UserAlreadyJoinedException("User already in this community");
+
         userRepository.joinCommunity(user.getUserId(), cid);
     }
 
@@ -165,7 +163,6 @@ public class CommunityService {
             communityRepository.deleteById(cid);
             return;
         }
-
-        throw new BadCredentialsException("cannot delete other's community");
+        throw new UnauthorizedAccessException("User is not authorized to delete this community");
     }
 }

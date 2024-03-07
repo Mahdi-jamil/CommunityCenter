@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 
 @Builder
 public record CommentDto(
-        Long id,
+        Long commentId,
+        Long postId,
         String authorUsername,
         String body,
         LocalDateTime lastUpdate,

@@ -54,10 +54,7 @@ public class UserService {
     }
 
     public List<ListPostDto> getUserPosts(Long uid, String property, String order) {
-        Sort sort = order.equals("desc")
-                ? Sort.by(Sort.Direction.DESC, property)
-                : Sort.by(Sort.Direction.ASC, property);
-
+        Sort sort = Sort.by(Sort.Direction.fromString(order),property);
         return postRepository
                 .findByAuthor_userId(uid, sort)
                 .stream()
@@ -66,10 +63,7 @@ public class UserService {
     }
 
     public List<CommentDto> getUserComments(Long uid, String property, String order) {
-        Sort sort = order.equals("desc")
-                ? Sort.by(Sort.Direction.DESC, property)
-                : Sort.by(Sort.Direction.ASC, property);
-
+        Sort sort = Sort.by(Sort.Direction.fromString(order),property);
         return commentRepository
                 .findByAuthor_userId(uid, sort)
                 .stream()

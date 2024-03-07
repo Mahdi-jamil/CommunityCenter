@@ -35,7 +35,6 @@ public class SecurityConfig {
             "/v3/api-docs.yaml",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/hello",
             "/api/accessDenied",
             "/h2-console/**"
     };

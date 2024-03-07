@@ -48,8 +48,9 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Comment> childComments;  // todo check not run and work
+    @OneToMany(mappedBy = "parentComment",cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Comment> childComments;
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")

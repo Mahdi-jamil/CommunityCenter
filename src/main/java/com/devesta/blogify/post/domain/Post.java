@@ -39,18 +39,19 @@ public class Post {
     private Integer votes = 0;
 
     @UpdateTimestamp
-    private LocalDate lastUpdate; // todo test as comment
+    private LocalDate lastUpdate;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "posted_in_community_id")
     @ToString.Exclude
     private Community community;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @ToString.Exclude
     private List<Comment> comments; // todo check not run and work
 
     @PreUpdate

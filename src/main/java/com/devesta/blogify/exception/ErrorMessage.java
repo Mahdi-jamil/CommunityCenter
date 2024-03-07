@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -12,7 +11,7 @@ import java.util.Date;
 @Setter
 public class ErrorMessage {
 
-    private Date date;
+    private Date date;// todo
     private String message;
     private String details;
 

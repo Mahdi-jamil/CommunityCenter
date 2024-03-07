@@ -3,12 +3,12 @@ package com.devesta.blogify.post;
 import com.devesta.blogify.comment.domain.CommentDto;
 import com.devesta.blogify.comment.domain.CommentMapper;
 import com.devesta.blogify.exception.exceptions.PostNotFoundException;
+import com.devesta.blogify.exception.exceptions.UnauthorizedAccessException;
 import com.devesta.blogify.post.domain.ListPostDto;
 import com.devesta.blogify.post.domain.Post;
 import com.devesta.blogify.post.domain.PostDto;
 import com.devesta.blogify.user.domain.User;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +56,7 @@ public class PostService {
         Post post = postRepository.findById(pid)
                 .orElseThrow(() -> new PostNotFoundException("post not found to update"));
         if (!post.getAuthor().equals(user))
-            throw new BadCredentialsException("cannot delete other's post");
+            throw new UnauthorizedAccessException("User is not authorized to delete this post");
 
         return post;
     }

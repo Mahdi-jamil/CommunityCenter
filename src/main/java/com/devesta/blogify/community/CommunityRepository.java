@@ -13,6 +13,8 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     @Query("select c from Community c inner join c.tags tags where upper(tags.name) like upper(?1)")
     List<Community> findByTags_NameLikeIgnoreCase(String name);
 
+    List<Community> findByNameContainsIgnoreCase(String name);
+
     @Query("select c.createdBy from Community c where c.communityId = ?1")
     Optional<User> getCommunityOwner(Long cid);
 

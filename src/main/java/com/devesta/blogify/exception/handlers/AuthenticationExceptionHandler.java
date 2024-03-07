@@ -2,6 +2,7 @@ package com.devesta.blogify.exception.handlers;
 
 import com.devesta.blogify.exception.exceptions.EmailAlreadyExistsException;
 import com.devesta.blogify.exception.ErrorMessage;
+import com.devesta.blogify.exception.exceptions.UnauthorizedAccessException;
 import com.devesta.blogify.exception.exceptions.UserAlreadyExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,14 @@ public class AuthenticationExceptionHandler {
         logger.info("{}", errorDetails);
         return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ErrorMessage> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        ErrorMessage errorDetails = new ErrorMessage(new Date(), ex.getMessage());
+        logger.info("{}", errorDetails);
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+    }
+
 
     @ExceptionHandler(AccessDeniedException.class)
     public final ResponseEntity<ErrorMessage> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {

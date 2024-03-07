@@ -9,7 +9,6 @@ import com.devesta.blogify.security.jwt.JwtService;
 import com.devesta.blogify.user.UserRepository;
 import com.devesta.blogify.user.domain.Role;
 import com.devesta.blogify.user.domain.User;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
