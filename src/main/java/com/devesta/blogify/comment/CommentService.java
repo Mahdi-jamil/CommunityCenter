@@ -34,7 +34,7 @@ public class CommentService {
     }
 
     public List<CommentDto> getAllRepliesToComment(Long pid, Long commentID) {
-        return commentRepository.findByPost_PostIdAndParentComment_CommentId(pid, commentID)
+        return commentRepository.findAllByPost_PostIdAndParentComment_CommentId(pid, commentID)
                 .stream()
                 .map(commentMapper.INSTANCE::toCommentDto)
                 .collect(Collectors.toList());

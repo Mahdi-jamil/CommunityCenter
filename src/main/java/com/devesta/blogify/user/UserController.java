@@ -5,13 +5,19 @@ import com.devesta.blogify.community.domain.dto.ListCommunityDto;
 import com.devesta.blogify.post.domain.ListPostDto;
 import com.devesta.blogify.user.domain.UpdatePayLoad;
 import com.devesta.blogify.user.domain.UserDto;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.sql.Blob;
 import java.util.List;
 
 @RestController
@@ -45,6 +51,11 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserCommunities(uid), HttpStatus.OK);
     }
 
+    @GetMapping("/{uid}/profile")
+    public ResponseEntity<Blob> getUserProfile(@PathVariable Long uid) {
+        return new ResponseEntity<>(userService.getUserProfile(uid), HttpStatus.OK);
+    }
+
 
     @GetMapping("/{uid}/comments")
     public ResponseEntity<List<CommentDto>> getCommentsForUser(
@@ -63,4 +74,13 @@ public class UserController {
     ) {
         return new ResponseEntity<>(userService.partialUpdate(updatePayLoad, uid), HttpStatus.OK);
     }
+
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> upload(
+            @RequestPart MultipartFile file,
+            Authentication authentication) throws IOException {
+        userService.uploadProfileImage(authentication, file);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

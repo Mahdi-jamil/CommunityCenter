@@ -14,6 +14,7 @@ import com.devesta.blogify.post.domain.Post;
 import com.devesta.blogify.user.UserRepository;
 import com.devesta.blogify.user.domain.UserDto;
 import com.devesta.blogify.user.domain.UserMapper;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,6 @@ public class SearchService {
                 .collect(Collectors.toList());
     }
 
-
     public List<ListCommunityDto> searchForCommunities(String name) {
         return communityRepository.findByNameContainsIgnoreCase(name)
                 .stream()
@@ -63,17 +63,18 @@ public class SearchService {
     public List<CommentDto> searchForComments(String body, String property) {
         List<Comment> comments;
         if (property != null)
-            comments = commentRepository.findByBodyContainsIgnoreCase(body, Sort.by(property));
+            comments = commentRepository.findAllByBodyContainsIgnoreCase(body, Sort.by(property));
         else
-            comments = commentRepository.findByBodyContainsIgnoreCase(body);
+            comments = commentRepository.findAllByBodyContainsIgnoreCase(body);
 
         return comments.stream()
                 .map(commentMapper::toCommentDto)
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public List<UserDto> searchForPeople(String username) {
-        return userRepository.findByUsernameContainsIgnoreCase(username)
+        return userRepository.findAllByUsernameContainsIgnoreCase(username)
                 .stream()
                 .map(userMapper::userToUserDao)
                 .collect(Collectors.toList());

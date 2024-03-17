@@ -9,7 +9,9 @@ import com.devesta.blogify.security.jwt.JwtService;
 import com.devesta.blogify.user.UserRepository;
 import com.devesta.blogify.user.domain.Role;
 import com.devesta.blogify.user.domain.User;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,7 +27,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest registerRequest) {
+    public AuthenticationResponse register(@NotNull RegisterRequest registerRequest) {
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
             throw new UserAlreadyExistsException(registerRequest.getUsername());
         }
@@ -48,6 +50,7 @@ public class AuthenticationService {
                 .build();
     }
 
+    @Transactional
     public AuthenticationResponse login(LoginRequest loginRequest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

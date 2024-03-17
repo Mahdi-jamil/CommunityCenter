@@ -17,11 +17,10 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
 
-@ControllerAdvice
 @RestControllerAdvice
 public class AuthenticationExceptionHandler {
 
-    Logger logger = LoggerFactory.getLogger(AuthenticationExceptionHandler.class); // todo
+    Logger logger = LoggerFactory.getLogger(AuthenticationExceptionHandler.class);
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ErrorMessage> handleDuplicateUsernameException(UserAlreadyExistsException ex) {
@@ -53,8 +52,8 @@ public class AuthenticationExceptionHandler {
 
 
     @ExceptionHandler(AccessDeniedException.class)
-    public final ResponseEntity<ErrorMessage> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
-        ErrorMessage errorDetails = new ErrorMessage(new Date(), ex.getMessage(), request.getDescription(false));
+    public final ResponseEntity<ErrorMessage> handleAccessDeniedException(AccessDeniedException ex) {
+        ErrorMessage errorDetails = new ErrorMessage(new Date(), ex.getMessage());
         logger.info("{}", errorDetails);
         return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
     }

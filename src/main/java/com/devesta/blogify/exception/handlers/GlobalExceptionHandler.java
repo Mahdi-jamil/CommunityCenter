@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Date;
 
@@ -18,7 +17,6 @@ public class GlobalExceptionHandler {
     Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorMessage> userNotFoundExceptionHandler(UserNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
         logger.info("{}", message);
@@ -26,7 +24,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CommunityNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorMessage> communityNotFoundExceptionHandler(CommunityNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
         logger.info("{}", message);
@@ -34,7 +31,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PostNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorMessage> postNotFoundExceptionHandler(PostNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
         logger.info("{}", message);
@@ -42,7 +38,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CommentNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorMessage> commentNotFoundExceptionHandler(CommentNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
         logger.info("{}", message);
@@ -50,7 +45,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CommunityNameExistException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ErrorMessage> communityNameExistsExceptionHandler(CommunityNameExistException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
         logger.info("{}", message);
@@ -58,7 +52,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotJoinedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorMessage> userNotJoinedExceptionHandler(UserNotJoinedException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
         logger.info("{}", message);
@@ -66,9 +59,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserAlreadyJoinedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorMessage> userAlreadyJoinedExceptionHandler(UserAlreadyJoinedException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
+        logger.info("{}", message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorMessage> badRequestGlobalHandler(BadRequestException exception) {
+        ErrorMessage message = new ErrorMessage(new Date(), "Bad Request",exception.getMessage());
         logger.info("{}", message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }

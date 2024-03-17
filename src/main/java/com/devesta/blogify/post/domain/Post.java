@@ -52,7 +52,7 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @ToString.Exclude
-    private List<Comment> comments; // todo check not run and work
+    private List<Comment> comments;
 
     @PreUpdate
     protected void onUpdate() {

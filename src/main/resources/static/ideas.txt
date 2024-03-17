@@ -2,19 +2,28 @@ Community:
     public - private - restricted types of community
     +18 or not (boolean)
     welcome message(boolean with if true add one)
+    Rules
+    Get Popular communities
+        https://www.reddit.com/r/lebanonmemes/comments/m0c8qa/discord_server_welcoming_members/?sort=top
+            sort=top, old, new, Sort by Best:
+                            Sorting by best involves a more nuanced algorithm that considers factors beyond just the number of upvotes or engagement.
+                            In addition to considering the quantity of votes, it might also take into account factors such as the ratio of upvotes to downvotes or the recency of the votes.
+                            The goal of sorting by best is to surface content that not only has a high number of votes but also maintains a high level of approval relative to the engagement it receives.
+                            This sorting method aims to highlight content that is both popular and consistently well-received by the community, potentially offering a more balanced representation of quality content.
+
 
 User:
-    add profile img
-    add about (bio) section
-    add instagram link
+    add Role (mediator)
+    add follow feature
+    private chat
 
 Posts:
     can upload img
+    number of comments
 
 Features:
     1-Add community room for live chatting
-
-
+    2-Add Oauth2
 
 
 Postgres :

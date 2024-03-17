@@ -20,7 +20,6 @@ import java.util.List;
 public class SearchController {
 
     private final SearchService searchService;
-    private final UserService userService;
 
     @GetMapping("/posts/{title}")
     public ResponseEntity<List<ListPostDto>> searchPostsByTitle(

@@ -1,5 +1,6 @@
 package com.devesta.blogify.exception;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,8 @@ import java.util.Date;
 @Setter
 public class ErrorMessage {
 
-    private Date date;// todo
+    @JsonFormat(shape = JsonFormat.Shape.STRING , pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private Date date;
     private String message;
     private String details;
 

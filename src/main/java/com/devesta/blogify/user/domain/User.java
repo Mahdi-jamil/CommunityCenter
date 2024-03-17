@@ -2,18 +2,21 @@ package com.devesta.blogify.user.domain;
 
 import com.devesta.blogify.community.domain.Community;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Blob;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -25,14 +28,16 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-@ToString(exclude = "joinedCommunities")
 public class User implements UserDetails {
 
     @Id
-    @SequenceGenerator(name = "user_sequence",
+    @SequenceGenerator(name = "user_generator",
             sequenceName = "user_sequence",
             allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user_generator"
+    )
     @Column(name = "user_id")
     private Long userId;
 
@@ -47,11 +52,18 @@ public class User implements UserDetails {
     )
     private String password;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    private ProfileImage profileImage;
+
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     private String email;
 
+    private String bio;
+
     @CreationTimestamp
+    @Temporal(value = TemporalType.DATE)
     private LocalDate createdDate;
 
     @ManyToMany(fetch = FetchType.LAZY )
@@ -64,10 +76,12 @@ public class User implements UserDetails {
                     name = "community_id"
             )
     )
-    private List<Community> joinedCommunities;
+    @ToString.Exclude
+    @Builder.Default
+    private List<Community> joinedCommunities = new ArrayList<>();
 
     @Enumerated(value = EnumType.STRING)
-    private Role role;
+    private Role role; // todo can have more than 1 role
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -108,6 +122,17 @@ public class User implements UserDetails {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", createdDate=" + createdDate +
+                ", role=" + role +
+                '}';
     }
 }
 

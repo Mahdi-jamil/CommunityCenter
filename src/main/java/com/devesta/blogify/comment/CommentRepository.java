@@ -11,16 +11,16 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findByBodyContainsIgnoreCase(String body, Sort sort);
-    List<Comment> findByBodyContainsIgnoreCase(String body);
+    List<Comment> findAllByBodyContainsIgnoreCase(String body, Sort sort);
+    List<Comment> findAllByBodyContainsIgnoreCase(String body);
 
     List<Comment> findAllByPost_PostId(Long postId);
 
     @Query("select c.author from Comment c where c.commentId = ?1")
     Optional<User> findUserByCommentId(Long commentId);
 
-    List<Comment> findByPost_PostIdAndParentComment_CommentId(Long postId, Long commentId);
+    List<Comment> findAllByPost_PostIdAndParentComment_CommentId(Long postId, Long commentId);
 
-    List<Comment> findByAuthor_userId(Long id, Sort sort);
+    List<Comment> findAllByAuthor_userId(Long id, Sort sort);
 
 }

@@ -15,9 +15,10 @@ import com.devesta.blogify.tag.TagDto;
 import com.devesta.blogify.tag.TagRepository;
 import com.devesta.blogify.user.UserRepository;
 import com.devesta.blogify.user.domain.User;
-import com.devesta.blogify.user.domain.UserDto;
 import com.devesta.blogify.user.domain.UserMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,14 @@ public class CommunityService {
                 .collect(Collectors.toList());
     }
 
+    public List<ListCommunityDto> getTopCommunities() {
+        return communityRepository
+                .findAll(PageRequest.of(4, 20, Sort.by("numberOfMembers")))
+                .stream()
+                .map(listCommunityMapper.INSTANCE::COMMUNITY_DTO)
+                .collect(Collectors.toList());
+    }
+
     public List<ListCommunityDto> getListOfCommunitiesByTag(String tagName) {
         return communityRepository
                 .findByTags_NameLikeIgnoreCase(tagName)
@@ -60,16 +69,6 @@ public class CommunityService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserDto> getUsersInCommunity(Long cid) {
-        if (!communityRepository.existsById(cid)) {
-            throw new CommunityNotFoundException("community not found");
-        }
-
-        List<User> userList = userRepository.findByJoinedCommunities_CommunityId(cid);
-        return userList.stream()
-                .map(userMapper.INSTANCE::userToUserDao)
-                .collect(Collectors.toList());
-    }
 
     private List<TagDto> tagToDto(List<Tag> tags) {
         List<TagDto> tagDto = new ArrayList<>();

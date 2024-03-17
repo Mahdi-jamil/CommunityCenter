@@ -21,9 +21,8 @@ public class ValidationExceptionHandler {
 
     Logger logger = LoggerFactory.getLogger(ValidationExceptionHandler.class);
 
-    @ExceptionHandler(ConstraintViolationException.class) //  todo Change return to Error msg
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleValidationException(ConstraintViolationException exception) {
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorMessage> handleValidationException(ConstraintViolationException exception) {
         List<String> errors = new ArrayList<>();
 
         exception.getConstraintViolations().forEach((error) ->
@@ -35,8 +34,7 @@ public class ValidationExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorMessage> handleValidationExceptions(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
         List<String> errors = new ArrayList<>();
 

@@ -1,5 +1,6 @@
 package com.devesta.blogify.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -9,6 +10,8 @@ public record UserDto(
         Long userId,
         String username,
         String email,
+        String bio,
         LocalDate createdDate,
-        Role role) {
+        Role role
+) {
 }

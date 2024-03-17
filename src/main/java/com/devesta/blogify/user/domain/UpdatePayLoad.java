@@ -15,5 +15,7 @@ public record UpdatePayLoad(
                 message = "Password must be at least 6 characters long, contain at least one letter and one digit, and no whitespaces."
         )
         @Nullable
-        String password) {
+        String password,
+
+        String bio) {
 }

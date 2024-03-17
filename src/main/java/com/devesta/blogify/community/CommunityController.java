@@ -4,7 +4,6 @@ import com.devesta.blogify.community.domain.dto.CommunityDto;
 import com.devesta.blogify.community.domain.dto.ListCommunityDto;
 import com.devesta.blogify.post.domain.ListPostDto;
 import com.devesta.blogify.post.domain.PostDto;
-import com.devesta.blogify.user.domain.UserDto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,17 +52,6 @@ public class CommunityController {
             @RequestBody @Valid CommunityDto communityDto,
             Authentication authentication) {
         return new ResponseEntity<>(communityService.addCommunity(communityDto, authentication), HttpStatus.CREATED);
-    }
-
-    /**
-     * Retrieves a list of members in a specific community.
-     *
-     * @param cid ID of the community.
-     * @return ResponseEntity<List<UserDto>> List of members in the community.
-     */
-    @GetMapping("/{cid}/members")
-    public ResponseEntity<List<UserDto>> getUsersInCommunity(@PathVariable Long cid) {
-        return new ResponseEntity<>(communityService.getUsersInCommunity(cid), HttpStatus.OK);
     }
 
     /**
