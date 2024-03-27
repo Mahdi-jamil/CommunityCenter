@@ -2,7 +2,7 @@ package com.devesta.blogify.user.domain;
 
 public enum Role {
     USER("user"),
-    ADMIN("admin"); // todo add MODERATOR
+    ADMIN("admin");
 
     private final String name;
 

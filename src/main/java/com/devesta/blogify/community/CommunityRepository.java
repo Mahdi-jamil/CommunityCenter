@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface CommunityRepository extends JpaRepository<Community, Long> {
 
@@ -15,8 +16,11 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
 
     List<Community> findByNameContainsIgnoreCase(String name);
 
-    @Query("select c.createdBy from Community c where c.communityId = ?1")
+    @Query("select c.creator from Community c where c.communityId = ?1")
     Optional<User> getCommunityOwner(Long cid);
+
+    @Query("select c.moderators from Community c where c.communityId = ?1")
+    Set<User> getCommunityModerators(Long cid);
 
     boolean existsByName(String name);
 }

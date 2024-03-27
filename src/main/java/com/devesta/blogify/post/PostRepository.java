@@ -28,6 +28,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT c FROM Comment c WHERE c.post.postId = ?1")
     List<Comment> findCommentsByPostId(Long postId);
 
+    @Query(
+            value = "SELECT COUNT(*) FROM comment WHERE post_id = ?1",
+            nativeQuery = true
+    )
+    int getNumberOfComments(Long pid);
+
     List<Post> findByTitleContainsIgnoreCaseAndLastUpdateAfter(String title, LocalDate date, Sort sort);
 
     @Query("SELECT p FROM Post p WHERE lower(p.title) LIKE lower(concat('%', :title, '%')) " +

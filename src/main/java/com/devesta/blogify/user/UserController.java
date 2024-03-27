@@ -3,9 +3,9 @@ package com.devesta.blogify.user;
 import com.devesta.blogify.comment.domain.CommentDto;
 import com.devesta.blogify.community.domain.dto.ListCommunityDto;
 import com.devesta.blogify.post.domain.ListPostDto;
+import com.devesta.blogify.user.domain.userdetial.FullDetailUser;
 import com.devesta.blogify.user.domain.UpdatePayLoad;
-import com.devesta.blogify.user.domain.UserDto;
-import io.swagger.v3.oas.annotations.Operation;
+import com.devesta.blogify.user.domain.userlist.UserDto;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.Blob;
 import java.util.List;
 
 @RestController
@@ -30,11 +29,6 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
-    }
-
-    @GetMapping("/{username}")
-    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
-        return new ResponseEntity<>(userService.getUserByUsername(username), HttpStatus.OK);
     }
 
     @GetMapping("/{uid}/posts")
@@ -52,8 +46,14 @@ public class UserController {
     }
 
     @GetMapping("/{uid}/profile")
-    public ResponseEntity<Blob> getUserProfile(@PathVariable Long uid) {
-        return new ResponseEntity<>(userService.getUserProfile(uid), HttpStatus.OK);
+    public ResponseEntity<String> getUserProfileUrl(@PathVariable Long uid) {
+        return new ResponseEntity<>(userService.getUserProfileUrl(uid), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/{uid}")
+    public ResponseEntity<FullDetailUser> getDetailedUser(@PathVariable Long uid) {
+        return new ResponseEntity<>(userService.getDetailedUser(uid), HttpStatus.OK);
     }
 
 
@@ -76,11 +76,10 @@ public class UserController {
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> upload(
+    public ResponseEntity<String> upload(
             @RequestPart MultipartFile file,
             Authentication authentication) throws IOException {
-        userService.uploadProfileImage(authentication, file);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(userService.uploadProfileImage(authentication, file),HttpStatus.OK);
     }
 
 }

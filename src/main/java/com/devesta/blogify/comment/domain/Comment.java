@@ -8,8 +8,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -50,7 +50,7 @@ public class Comment {
 
     @OneToMany(mappedBy = "parentComment",cascade = CascadeType.REMOVE, orphanRemoval = true)
     @ToString.Exclude
-    private List<Comment> childComments;
+    private Set<Comment> childComments;
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")

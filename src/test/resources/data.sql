@@ -1,6 +1,6 @@
-INSERT INTO users (user_id,created_date, email, password, role, username)
-VALUES (2,'2024-03-09', 'jamilmahdi77@gmail.com', '$2a$10$uhIMXxrIxoOndzyupR8QYOZ1597bezEI20G4ARW61/QkWeRKFKMlC', 'USER', 'mahdi'),
-    (3,'2024-03-09', 'admin@example.com', '$2a$10$bLucA36JLRIKqyKJdeZ4Oe73GCvqY79RcjF0WkNqpqCidRIYTyufS', 'ADMIN', 'admin');
+INSERT INTO users (user_id,created_date, email, password, role, username,image_url)
+VALUES (2,'2024-03-09', 'jamilmahdi77@gmail.com', '$2a$10$uhIMXxrIxoOndzyupR8QYOZ1597bezEI20G4ARW61/QkWeRKFKMlC', 'USER', 'mahdi','image_url1'),
+    (3,'2024-03-09', 'admin@example.com', '$2a$10$bLucA36JLRIKqyKJdeZ4Oe73GCvqY79RcjF0WkNqpqCidRIYTyufS', 'ADMIN', 'admin','image_url1');
 
 -- mahdi pass :spring
 --admin pass :adminpassword

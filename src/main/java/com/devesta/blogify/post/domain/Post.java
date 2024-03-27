@@ -11,6 +11,7 @@ import org.hibernate.proxy.HibernateProxy;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "post")
@@ -52,7 +53,7 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @ToString.Exclude
-    private List<Comment> comments;
+    private Set<Comment> comments;
 
     @PreUpdate
     protected void onUpdate() {

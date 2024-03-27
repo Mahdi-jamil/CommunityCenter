@@ -1,18 +1,14 @@
 package com.devesta.blogify.user;
 
 import com.devesta.blogify.community.domain.Community;
+import com.devesta.blogify.user.domain.profile.ProfileImage;
 import com.devesta.blogify.user.domain.User;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Blob;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +32,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u.joinedCommunities from User u where u.userId = ?1")
     List<Community> userCommunities(Long uid);
 
+    @Query("SELECT u.profileUrl FROM User u WHERE u.userId = ?1")
+    String findProfileUrlByUsername(Long uid);
+
     @Modifying
     @Transactional
     @Query(
@@ -57,12 +56,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             nativeQuery = true
     )
     Long alreadyJoined(Long uid, Long cid);
-
-    @Query(
-            value = "select profile_image from users where user_id = ?1",
-            nativeQuery = true
-    )
-    Blob getUserProfileImg(Long uid);
 
 
 }

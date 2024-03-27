@@ -5,58 +5,64 @@ import com.devesta.blogify.comment.domain.CommentDto;
 import com.devesta.blogify.comment.domain.CommentMapper;
 import com.devesta.blogify.community.domain.dto.ListCommunityDto;
 import com.devesta.blogify.community.domain.mapper.ListCommunityMapper;
-import com.devesta.blogify.exception.exceptions.BadRequestException;
 import com.devesta.blogify.exception.exceptions.UserNotFoundException;
+import com.devesta.blogify.firebase.FileDAO;
 import com.devesta.blogify.post.PostRepository;
 import com.devesta.blogify.post.domain.ListPostDto;
 import com.devesta.blogify.post.domain.ListPostMapper;
-import com.devesta.blogify.user.domain.*;
-import jakarta.transaction.Transactional;
+import com.devesta.blogify.user.domain.UpdatePayLoad;
+import com.devesta.blogify.user.domain.User;
+import com.devesta.blogify.user.domain.userdetial.DetailUserMapper;
+import com.devesta.blogify.user.domain.userdetial.FullDetailUser;
+import com.devesta.blogify.user.domain.userlist.SimpleUserMapper;
+import com.devesta.blogify.user.domain.userlist.UserDto;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.sql.rowset.serial.SerialBlob;
-import javax.sql.rowset.serial.SerialException;
 import java.io.IOException;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final SimpleUserMapper simpleUserMapper;
     private final PostRepository postRepository;
     private final ListPostMapper listPostMapper;
     private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
     private final CommentMapper commentMapper;
     private final ListCommunityMapper listCommunityMapper;
+    private final FileDAO fileDAO;
+    private final DetailUserMapper detailUserMapper;
 
     public List<UserDto> getAllUser() {
         return userRepository
                 .findAll(PageRequest.ofSize(10))
                 .stream()
-                .map(userMapper::userToUserDao)
+                .map(simpleUserMapper::userToUserDao)
                 .collect(Collectors.toList());
     }
 
-    public UserDto getUserByUsername(String username) {
+    public FullDetailUser getDetailedUser(Long uid) {
+        return userRepository.findById(uid)
+                .map(detailUserMapper::userToDetailUserDao)
+                .orElseThrow(() -> new UserNotFoundException("user with id:" + uid + " not found"));
+    }
+
+    public FullDetailUser getUserByUsername(String username) {
         return userRepository
                 .findByUsername(username)
-                .map(UserMapper.INSTANCE::userToUserDao)
+                .map(detailUserMapper::userToDetailUserDao)
                 .orElseThrow(() ->
                         new UserNotFoundException("user with username: " + username + " not found"));
     }
@@ -79,22 +85,6 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDto partialUpdate(UpdatePayLoad updatePayLoad, Long uid) {
-        User user = userRepository.findById(uid)
-                .orElseThrow(() -> new UserNotFoundException("User not found for update"));
-
-        Optional.ofNullable(updatePayLoad.email())
-                .ifPresent(user::setEmail);
-        Optional.ofNullable(updatePayLoad.password())
-                .map(passwordEncoder::encode)
-                .ifPresent(user::setPassword);
-        Optional.ofNullable(updatePayLoad.bio())
-                .ifPresent(user::setBio);
-
-        return userMapper.userToUserDao(userRepository.save(user));
-
-    }
-
     public List<ListCommunityDto> getUserCommunities(Long uid) {
         return userRepository.userCommunities(uid)
                 .stream()
@@ -102,25 +92,41 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void uploadProfileImage(Authentication authentication, MultipartFile file) {
+    public UserDto partialUpdate(UpdatePayLoad updatePayLoad, Long uid) {
+        User user = userRepository.findById(uid)
+                .orElseThrow(() -> new UserNotFoundException("User not found for update"));
+
+        Optional.ofNullable(updatePayLoad.email())
+                .ifPresent(user::setEmail);
+
+        Optional.ofNullable(updatePayLoad.password())
+                .map(passwordEncoder::encode)
+                .ifPresent(user::setPassword);
+
+        Optional.ofNullable(updatePayLoad.bio())
+                .ifPresent(user::setBio);
+
+        return simpleUserMapper.userToUserDao(userRepository.save(user));
+
+    }
+
+    public String getUserProfileUrl(Long uid) {
+        return userRepository.findProfileUrlByUsername(uid);
+    }
+
+    public String uploadProfileImage(@NotNull Authentication authentication, MultipartFile image) throws IOException {
+        String image_url = fileDAO.uploadAndGetUrl(image);
         User user = (User) authentication.getPrincipal();
-        try {
-            Blob profileImg = new SerialBlob(file.getBytes());
-            if (!isImage(file)) throw new BadRequestException("Only .jpeg, .jpg, or .png image files are allowed.");
-            user.setProfileImage(new ProfileImage(user.getUserId(), profileImg));
-            userRepository.save(user);
-        } catch (IOException | SQLException e) {
-            throw new BadRequestException("Upload correct file");
+
+        String oldImageUrl = user.getProfileUrl();
+        if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+            fileDAO.deleteFileFromFirebase(oldImageUrl);
         }
+
+        user.setProfileUrl(image_url);
+        userRepository.save(user);
+
+        return image_url;
     }
 
-    private boolean isImage(MultipartFile file) {
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-        return fileExtension.equals("jpg") || fileExtension.equals("jpeg") || fileExtension.equals("png");
-    }
-
-    public Blob getUserProfile(Long uid) {
-        return userRepository.getUserProfileImg(uid);
-    }
 }

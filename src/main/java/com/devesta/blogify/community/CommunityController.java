@@ -4,6 +4,7 @@ import com.devesta.blogify.community.domain.dto.CommunityDto;
 import com.devesta.blogify.community.domain.dto.ListCommunityDto;
 import com.devesta.blogify.post.domain.ListPostDto;
 import com.devesta.blogify.post.domain.PostDto;
+import com.devesta.blogify.user.domain.userlist.UserDto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -139,4 +140,37 @@ public class CommunityController {
         communityService.deleteCommunity(cid, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PostMapping("/{communityId}/moderators/{userId}")
+    public ResponseEntity<?> addModeratorToCommunity(
+            @PathVariable Long communityId,
+            @PathVariable Long userId,
+            Authentication authentication) {
+        communityService.promoteToModerator(communityId, userId,authentication);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{communityId}/moderators/{userId}")
+    public ResponseEntity<?> removeModeratorFromCommunity(
+            @PathVariable Long communityId,
+            @PathVariable Long userId,
+            Authentication authentication) {
+        communityService.removeModeratorFromCommunity(communityId, userId,authentication);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{communityId}/{userId}")
+    public ResponseEntity<?> bannedUser(
+            @PathVariable Long communityId,
+            @PathVariable Long userId,
+            Authentication authentication) {
+        communityService.bannedMember(communityId, userId,authentication);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{communityId}/moderator")
+    public ResponseEntity<List<UserDto>> getModerators(@PathVariable Long communityId){
+        return new ResponseEntity<>(communityService.getModerators(communityId), HttpStatus.OK) ;
+    }
+
 }

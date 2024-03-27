@@ -50,7 +50,7 @@ public class UserControllerIntegrationTests {
 
     @Test
     public void testThatGetReturnUser() throws Exception {
-        when(userService.getUserByUsername("mahdi")).thenReturn(utils.userDto1);
+        when(userService.getUserByUsername("mahdi")).thenReturn(utils.fullDetailUser);
 
         mockMvc.perform(
                 get("/api/v1/users/{username}", "mahdi")
@@ -82,9 +82,7 @@ public class UserControllerIntegrationTests {
         ).andExpect(
                 jsonPath("$[0].username").value("mahdi")
         ).andExpect(
-                jsonPath("$[0].email").value("jamilmahdi77@gmail.com")
-        ).andExpect(
-                jsonPath("$[0].role").value("USER")
+                jsonPath("$[0].image_url").value("image_url1")
         ).andExpect(
                 jsonPath("$[0].createdDate[0]").value(utils.year)
         ).andExpect(
@@ -107,7 +105,7 @@ public class UserControllerIntegrationTests {
 
     @Test
     public void testThatGetReturn200() throws Exception {
-        when(userService.getUserByUsername("mahdi")).thenReturn(utils.userDto1);
+        when(userService.getUserByUsername("mahdi")).thenReturn(utils.fullDetailUser);
         mockMvc.perform(
                 get("/api/v1/users/{username}", "mahdi")
         ).andExpect(status().isOk());

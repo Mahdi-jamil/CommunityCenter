@@ -2,7 +2,6 @@ package com.devesta.blogify.user.domain;
 
 import com.devesta.blogify.community.domain.Community;
 import jakarta.persistence.*;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -14,12 +13,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.sql.Blob;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -52,9 +47,11 @@ public class User implements UserDetails {
     )
     private String password;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true)
-    @JoinColumn(name = "user_id")
-    private ProfileImage profileImage;
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true,optional = false)
+//    @JoinColumn(name = "user_id")
+//    private ProfileImage profileImage;
+
+    private  String profileUrl;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
@@ -78,14 +75,14 @@ public class User implements UserDetails {
     )
     @ToString.Exclude
     @Builder.Default
-    private List<Community> joinedCommunities = new ArrayList<>();
+    private Set<Community> joinedCommunities = new HashSet<>();
 
     @Enumerated(value = EnumType.STRING)
-    private Role role; // todo can have more than 1 role
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return Collections.singleton(new SimpleGrantedAuthority(role.toString()));
     }
 
     @Override

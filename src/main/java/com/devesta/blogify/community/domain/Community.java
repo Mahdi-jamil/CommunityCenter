@@ -5,9 +5,9 @@ import com.devesta.blogify.post.domain.Post;
 import com.devesta.blogify.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -39,7 +39,7 @@ public class Community {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
-    private User createdBy;
+    private User creator;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
@@ -51,9 +51,23 @@ public class Community {
                     name = "tag_id"
             )
     )
-    private List<Tag> tags;
+    private Set<Tag> tags;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "community_moderator",
+            joinColumns = @JoinColumn(
+                    name = "user_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "community_id"
+            )
+    )
+    @ToString.Exclude
+    @Builder.Default
+    private Set<User> moderators = new HashSet<>();
 
     @OneToMany(mappedBy = "community" , cascade = CascadeType.REMOVE , orphanRemoval = true)
-    private List<Post> posts;
+    private Set<Post> posts;
 
 }

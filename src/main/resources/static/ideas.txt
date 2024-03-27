@@ -13,13 +13,11 @@ Community:
 
 
 User:
-    add Role (mediator)
     add follow feature
     private chat
 
 Posts:
     can upload img
-    number of comments
 
 Features:
     1-Add community room for live chatting

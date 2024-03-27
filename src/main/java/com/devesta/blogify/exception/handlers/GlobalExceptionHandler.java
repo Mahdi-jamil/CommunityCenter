@@ -44,6 +44,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<ErrorMessage> fileNotFoundExceptionHandler(FileNotFoundException exception) {
+        ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
+        logger.info("{}", message);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
+
     @ExceptionHandler(CommunityNameExistException.class)
     public ResponseEntity<ErrorMessage> communityNameExistsExceptionHandler(CommunityNameExistException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());

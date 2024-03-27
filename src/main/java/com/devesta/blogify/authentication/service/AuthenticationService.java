@@ -39,6 +39,7 @@ public class AuthenticationService {
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .email(registerRequest.getEmail())
+//                .role(Collections.singleton(Role.USER))
                 .role(Role.USER)
                 .build();
 

@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255),
     role VARCHAR(255) CHECK (role IN ('USER','ADMIN')),
     username VARCHAR(255) NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
     PRIMARY KEY (user_id)
 );
 

@@ -12,8 +12,8 @@ import com.devesta.blogify.post.domain.ListPostDto;
 import com.devesta.blogify.post.domain.ListPostMapper;
 import com.devesta.blogify.post.domain.Post;
 import com.devesta.blogify.user.UserRepository;
-import com.devesta.blogify.user.domain.UserDto;
-import com.devesta.blogify.user.domain.UserMapper;
+import com.devesta.blogify.user.domain.userlist.UserDto;
+import com.devesta.blogify.user.domain.userlist.SimpleUserMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -34,7 +34,7 @@ public class SearchService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final SimpleUserMapper simpleUserMapper;
 
     public List<ListPostDto> searchForPost(String title, LocalDate postedAfter, String property, String order) {
         List<Post> posts;
@@ -76,7 +76,7 @@ public class SearchService {
     public List<UserDto> searchForPeople(String username) {
         return userRepository.findAllByUsernameContainsIgnoreCase(username)
                 .stream()
-                .map(userMapper::userToUserDao)
+                .map(simpleUserMapper::userToUserDao)
                 .collect(Collectors.toList());
     }
 }
