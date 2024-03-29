@@ -13,7 +13,7 @@ public interface SimpleUserMapper {
     SimpleUserMapper INSTANCE = Mappers.getMapper(SimpleUserMapper.class);
 
     @Mapping(source = "createdDate", target = "createdDate", dateFormat = "yyyy/mm/dd")
-    @Mapping(source = "profile_url" , target = "image_url")
+    @Mapping(source = "profileUrl" , target = "image_url")
     UserDto userToUserDao(User user);
 
 }

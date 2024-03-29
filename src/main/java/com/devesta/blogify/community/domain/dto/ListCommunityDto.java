@@ -10,6 +10,7 @@ public record ListCommunityDto(
         @NotEmpty String name,
         String description,
         Integer numberOfMembers,
+        String communityIconUrl,
         List<TagDto> tags
 ) {
 }

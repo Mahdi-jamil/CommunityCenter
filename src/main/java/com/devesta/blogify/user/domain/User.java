@@ -1,6 +1,7 @@
 package com.devesta.blogify.user.domain;
 
 import com.devesta.blogify.community.domain.Community;
+import com.devesta.blogify.security.jwt.Token;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -63,7 +64,7 @@ public class User implements UserDetails {
     @Temporal(value = TemporalType.DATE)
     private LocalDate createdDate;
 
-    @ManyToMany(fetch = FetchType.LAZY )
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_community",
             joinColumns = @JoinColumn(
@@ -79,6 +80,9 @@ public class User implements UserDetails {
 
     @Enumerated(value = EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

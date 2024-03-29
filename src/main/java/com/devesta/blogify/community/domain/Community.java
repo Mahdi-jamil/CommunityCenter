@@ -41,6 +41,8 @@ public class Community {
     @JoinColumn(name = "creator_id")
     private User creator;
 
+    private String communityIconUrl;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "community_tag",

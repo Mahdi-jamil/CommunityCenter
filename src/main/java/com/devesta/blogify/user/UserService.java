@@ -111,7 +111,7 @@ public class UserService {
     }
 
     public String getUserProfileUrl(Long uid) {
-        return userRepository.findProfileUrlByUsername(uid);
+        return userRepository.findProfileUrlById(uid);
     }
 
     public String uploadProfileImage(@NotNull Authentication authentication, MultipartFile image) throws IOException {

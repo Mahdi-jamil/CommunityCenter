@@ -45,11 +45,6 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserCommunities(uid), HttpStatus.OK);
     }
 
-    @GetMapping("/{uid}/profile")
-    public ResponseEntity<String> getUserProfileUrl(@PathVariable Long uid) {
-        return new ResponseEntity<>(userService.getUserProfileUrl(uid), HttpStatus.OK);
-    }
-
 
     @GetMapping("/{uid}")
     public ResponseEntity<FullDetailUser> getDetailedUser(@PathVariable Long uid) {
@@ -82,4 +77,8 @@ public class UserController {
         return new ResponseEntity<>(userService.uploadProfileImage(authentication, file),HttpStatus.OK);
     }
 
+    @GetMapping("/{uid}/profile")
+    public ResponseEntity<String> getUserProfileUrl(@PathVariable Long uid) {
+        return new ResponseEntity<>(userService.getUserProfileUrl(uid), HttpStatus.OK);
+    }
 }

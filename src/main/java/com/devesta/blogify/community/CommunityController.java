@@ -8,10 +8,13 @@ import com.devesta.blogify.user.domain.userlist.UserDto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 @RestController
 @AllArgsConstructor
@@ -147,7 +150,7 @@ public class CommunityController {
             @PathVariable Long userId,
             Authentication authentication) {
         communityService.promoteToModerator(communityId, userId,authentication);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{communityId}/moderators/{userId}")
@@ -156,7 +159,7 @@ public class CommunityController {
             @PathVariable Long userId,
             Authentication authentication) {
         communityService.removeModeratorFromCommunity(communityId, userId,authentication);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{communityId}/{userId}")
@@ -165,12 +168,25 @@ public class CommunityController {
             @PathVariable Long userId,
             Authentication authentication) {
         communityService.bannedMember(communityId, userId,authentication);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{communityId}/moderator")
     public ResponseEntity<List<UserDto>> getModerators(@PathVariable Long communityId){
         return new ResponseEntity<>(communityService.getModerators(communityId), HttpStatus.OK) ;
+    }
+
+    @PostMapping(value = "/{cid}/upload_icon", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadIcon(
+            @PathVariable Long cid,
+            @RequestPart MultipartFile file,
+            Authentication authentication) throws IOException {
+        return new ResponseEntity<>(communityService.uploadCommunityIcon(cid,authentication, file),HttpStatus.OK);
+    }
+
+    @GetMapping("/{cid}/icon")
+    public ResponseEntity<String> getUserProfileUrl(@PathVariable Long cid) {
+        return new ResponseEntity<>(communityService.getCommunityIcon(cid), HttpStatus.OK);
     }
 
 }

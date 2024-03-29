@@ -50,10 +50,10 @@ public class UserControllerIntegrationTests {
 
     @Test
     public void testThatGetReturnUser() throws Exception {
-        when(userService.getUserByUsername("mahdi")).thenReturn(utils.fullDetailUser);
+        when(userService.getDetailedUser(1L)).thenReturn(utils.fullDetailUser);
 
         mockMvc.perform(
-                get("/api/v1/users/{username}", "mahdi")
+                get("/api/v1/users/{uid}", 1L)
         ).andExpect(
                 jsonPath("$.username").value("mahdi")
         ).andExpect(
@@ -68,7 +68,7 @@ public class UserControllerIntegrationTests {
                 jsonPath("$.createdDate[2]").value(utils.day)
         );
 
-        verify(userService).getUserByUsername("mahdi");
+        verify(userService).getDetailedUser(1L);
     }
 
     @Test
@@ -97,17 +97,17 @@ public class UserControllerIntegrationTests {
 
     @Test
     public void testThatGetReturn404IfNotFound() throws Exception {
-        when(userService.getUserByUsername("userNotFound")).thenThrow(new UserNotFoundException());
+        when(userService.getDetailedUser(2L)).thenThrow(new UserNotFoundException());
         mockMvc.perform(
-                get("/api/v1/users/{username}", "userNotFound")
+                get("/api/v1/users/{uid}", 2L)
         ).andExpect(status().isNotFound());
     }
 
     @Test
     public void testThatGetReturn200() throws Exception {
-        when(userService.getUserByUsername("mahdi")).thenReturn(utils.fullDetailUser);
+        when(userService.getDetailedUser(1L)).thenReturn(utils.fullDetailUser);
         mockMvc.perform(
-                get("/api/v1/users/{username}", "mahdi")
+                get("/api/v1/users/{uid}",1L)
         ).andExpect(status().isOk());
     }
 

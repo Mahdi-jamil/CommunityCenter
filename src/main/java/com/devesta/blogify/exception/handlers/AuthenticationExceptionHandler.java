@@ -25,28 +25,28 @@ public class AuthenticationExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ErrorMessage> handleDuplicateUsernameException(UserAlreadyExistsException ex) {
         ErrorMessage errorDetails = new ErrorMessage(new Date(), ex.getMessage());
-        logger.info("{}", errorDetails);
+        logger.error("{}", errorDetails);
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorMessage> handleDuplicateEmailException(EmailAlreadyExistsException ex) {
         ErrorMessage errorDetails = new ErrorMessage(new Date(), ex.getMessage());
-        logger.info("{}", errorDetails);
+        logger.error("{}", errorDetails);
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorMessage> handleAuthenticationException(AuthenticationException ex) {
         ErrorMessage errorDetails = new ErrorMessage(new Date(), ex.getMessage());
-        logger.info("{}", errorDetails);
+        logger.error("{}", errorDetails);
         return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
     public ResponseEntity<ErrorMessage> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
         ErrorMessage errorDetails = new ErrorMessage(new Date(), ex.getMessage());
-        logger.info("{}", errorDetails);
+        logger.error("{}", errorDetails);
         return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
 
@@ -54,7 +54,7 @@ public class AuthenticationExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public final ResponseEntity<ErrorMessage> handleAccessDeniedException(AccessDeniedException ex) {
         ErrorMessage errorDetails = new ErrorMessage(new Date(), ex.getMessage());
-        logger.info("{}", errorDetails);
+        logger.error("{}", errorDetails);
         return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
     }
 

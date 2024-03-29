@@ -9,7 +9,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -23,14 +22,15 @@ public class FileDAO {
 
     private final Storage storage;
 
-    public void deleteFileFromFirebase(String fileUrl) {
-        String fileName = extractFileNameFromUrl(fileUrl);
-        BlobId blobId = BlobId.of("community-center-db.appspot.com", fileName);
-        try {
-            storage.delete(blobId);
-        } catch (StorageException e) {
-            throw new RuntimeException("Failed to delete file from Firebase Storage: " + e.getMessage());
-        }
+    public String uploadAndGetUrl(MultipartFile image) throws IOException {
+        if (!isImage(image))
+            throw new BadRequestException("Only .jpeg, .jpg, or .png image files are allowed.");
+
+        String fileName = UUID.randomUUID().toString().concat(
+                this.getExtension(Objects.requireNonNull(image.getOriginalFilename())));
+        File file = convertToFile(image, fileName);
+
+        return uploadFile(file, fileName);
     }
 
     public Blob getFileFromFirebase(String fileUrl) {
@@ -41,7 +41,17 @@ public class FileDAO {
         throw new FileNotFoundException("File not found on Firebase");
     }
 
-    public String uploadFile(File file, String fileName) {
+    public void deleteFileFromFirebase(String fileUrl) {
+        String fileName = extractFileNameFromUrl(fileUrl);
+        BlobId blobId = BlobId.of("community-center-db.appspot.com", fileName);
+        try {
+            storage.delete(blobId);
+        } catch (StorageException e) {
+            throw new RuntimeException("Failed to delete file from Firebase Storage: " + e.getMessage());
+        }
+    }
+
+    private String uploadFile(File file, String fileName) {
         BlobId blobId = BlobId.of("community-center-db.appspot.com", fileName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
         try {
@@ -53,41 +63,34 @@ public class FileDAO {
         }
     }
 
-    public String extractFileNameFromUrl(String imageUrl) {
+    private String extractFileNameFromUrl(String imageUrl) {
+        int questionMarkIndex = imageUrl.indexOf('?');
+        if (questionMarkIndex != -1) {
+            imageUrl = imageUrl.substring(0, questionMarkIndex);
+        }
         int lastSlashIndex = imageUrl.lastIndexOf('/');
-        if (lastSlashIndex != -1) {
+        if (lastSlashIndex != -1 && lastSlashIndex < imageUrl.length() - 1) {
             return imageUrl.substring(lastSlashIndex + 1);
         } else {
             throw new IllegalArgumentException("Invalid image URL format");
         }
     }
 
-    public boolean isImage(MultipartFile file) {
+    private boolean isImage(MultipartFile file) {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
         return fileExtension.equals("jpg") || fileExtension.equals("jpeg") || fileExtension.equals("png");
     }
 
-    public String getExtension(String fileName) {
+    private String getExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
-    public File convertToFile(MultipartFile multipartFile, String fileName) throws IOException {
-        File tempFile = new File(fileName);
-        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-            fos.write(multipartFile.getBytes());
-        }
+    private File convertToFile(MultipartFile multipartFile, String fileName) throws IOException {
+        File tempFile = Files.createTempFile(fileName, ".tmp").toFile();
+        multipartFile.transferTo(tempFile);
+        tempFile.deleteOnExit();
         return tempFile;
-    }
-
-    public String uploadAndGetUrl(MultipartFile image) throws IOException {
-        if (!isImage(image))
-            throw new BadRequestException("Only .jpeg, .jpg, or .png image files are allowed.");
-
-        String fileName = UUID.randomUUID().toString().concat(
-                this.getExtension(Objects.requireNonNull(image.getOriginalFilename())));
-        File file = convertToFile(image, fileName);
-        return uploadFile(file, fileName);
     }
 
 }

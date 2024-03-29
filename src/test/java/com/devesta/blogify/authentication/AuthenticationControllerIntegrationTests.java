@@ -54,7 +54,9 @@ public class AuthenticationControllerIntegrationTests {
                 new RegisterRequest("mahdi", "root123", "jamilmahdi77@gmail.com");
         String jsonRequest = objectMapper.writeValueAsString(request);
         AuthenticationResponse authenticationResponse =
-                new AuthenticationResponse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlVXNlciIsImlhdCI6MTY0NjQyOTcxOCwiZXhwIjoxNjQ2NDMzMzE4fQ.I4tvcDgS1rz8Gqo3UH00mjRxjCp8ncpYi3HX-BriWaQ");
+                new AuthenticationResponse(
+                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlVXNlciIsImlhdCI6MTY0NjQyOTcxOCwiZXhwIjoxNjQ2NDMzMzE4fQ.I4tvcDgS1rz8Gqo3UH00mjRxjCp8ncpYi3HX-BriWaQ",
+                        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTcyMDI1MiwiZXhwIjoxNzExODA2NjUyfQ.3ccQb1mT83nIoKFiIC-wgZ3OhQyL6qiSJ5ZfhY33Iz0");
         Mockito.when(authenticationService.register(request)).thenReturn(authenticationResponse);
 
         mockMvc.perform(
@@ -103,7 +105,9 @@ public class AuthenticationControllerIntegrationTests {
         LoginRequest request = new LoginRequest("mahdi", "root123");
         String jsonRequest = objectMapper.writeValueAsString(request);
         AuthenticationResponse authenticationResponse =
-                new AuthenticationResponse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlVXNlciIsImlhdCI6MTY0NjQyOTcxOCwiZXhwIjoxNjQ2NDMzMzE4fQ.I4tvcDgS1rz8Gqo3UH00mjRxjCp8ncpYi3HX-BriWaQ");
+                new AuthenticationResponse(
+                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlVXNlciIsImlhdCI6MTY0NjQyOTcxOCwiZXhwIjoxNjQ2NDMzMzE4fQ.I4tvcDgS1rz8Gqo3UH00mjRxjCp8ncpYi3HX-BriWaQ",
+                        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTcyMDI1MiwiZXhwIjoxNzExODA2NjUyfQ.3ccQb1mT83nIoKFiIC-wgZ3OhQyL6qiSJ5ZfhY33Iz0");
         Mockito.when(authenticationService.login(request)).thenReturn(authenticationResponse);
 
         mockMvc.perform(
@@ -112,6 +116,11 @@ public class AuthenticationControllerIntegrationTests {
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.token").isString()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.token").value("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJleGFtcGxlVXNlciIsImlhdCI6MTY0NjQyOTcxOCwiZXhwIjoxNjQ2NDMzMzE4fQ.I4tvcDgS1rz8Gqo3UH00mjRxjCp8ncpYi3HX-BriWaQ")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.refresh_token").value("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTcyMDI1MiwiZXhwIjoxNzExODA2NjUyfQ.3ccQb1mT83nIoKFiIC-wgZ3OhQyL6qiSJ5ZfhY33Iz0")
+
         );
     }
 

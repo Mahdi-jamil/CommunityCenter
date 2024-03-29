@@ -16,6 +16,7 @@ public interface ListCommunityMapper {
     ListCommunityMapper INSTANCE = Mappers.getMapper(ListCommunityMapper.class);
 
     @Mapping(source = "communityId" , target = "id")
+    @Mapping(source = "communityIconUrl" , target = "communityIconUrl")
     ListCommunityDto COMMUNITY_DTO(Community community);
 
     TagDto tagToDto(Tag tag);

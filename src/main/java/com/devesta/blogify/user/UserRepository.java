@@ -1,7 +1,6 @@
 package com.devesta.blogify.user;
 
 import com.devesta.blogify.community.domain.Community;
-import com.devesta.blogify.user.domain.profile.ProfileImage;
 import com.devesta.blogify.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -33,7 +32,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<Community> userCommunities(Long uid);
 
     @Query("SELECT u.profileUrl FROM User u WHERE u.userId = ?1")
-    String findProfileUrlByUsername(Long uid);
+    String findProfileUrlById(Long uid);
 
     @Modifying
     @Transactional

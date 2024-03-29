@@ -19,63 +19,70 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorMessage> userNotFoundExceptionHandler(UserNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
-        logger.info("{}", message);
+        logger.error("{}", message);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(CommunityNotFoundException.class)
     public ResponseEntity<ErrorMessage> communityNotFoundExceptionHandler(CommunityNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
-        logger.info("{}", message);
+        logger.error("{}", message);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<ErrorMessage> postNotFoundExceptionHandler(PostNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
-        logger.info("{}", message);
+        logger.error("{}", message);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(CommentNotFoundException.class)
     public ResponseEntity<ErrorMessage> commentNotFoundExceptionHandler(CommentNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
-        logger.info("{}", message);
+        logger.error("{}", message);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(FileNotFoundException.class)
     public ResponseEntity<ErrorMessage> fileNotFoundExceptionHandler(FileNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
-        logger.info("{}", message);
+        logger.error("{}", message);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
+
+    @ExceptionHandler(TokenNotFoundException.class)
+    public ResponseEntity<ErrorMessage> tokenNotFoundExceptionHandler(TokenNotFoundException exception) {
+        ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
+        logger.error("{}", message);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message);
     }
 
     @ExceptionHandler(CommunityNameExistException.class)
     public ResponseEntity<ErrorMessage> communityNameExistsExceptionHandler(CommunityNameExistException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
-        logger.info("{}", message);
+        logger.error("{}", message);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
     }
 
     @ExceptionHandler(UserNotJoinedException.class)
     public ResponseEntity<ErrorMessage> userNotJoinedExceptionHandler(UserNotJoinedException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
-        logger.info("{}", message);
+        logger.error("{}", message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 
     @ExceptionHandler(UserAlreadyJoinedException.class)
     public ResponseEntity<ErrorMessage> userAlreadyJoinedExceptionHandler(UserAlreadyJoinedException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
-        logger.info("{}", message);
+        logger.error("{}", message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorMessage> badRequestGlobalHandler(BadRequestException exception) {
         ErrorMessage message = new ErrorMessage(new Date(), "Bad Request",exception.getMessage());
-        logger.info("{}", message);
+        logger.error("{}", message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 

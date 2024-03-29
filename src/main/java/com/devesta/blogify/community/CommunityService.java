@@ -5,6 +5,7 @@ import com.devesta.blogify.community.domain.dto.CommunityDto;
 import com.devesta.blogify.community.domain.dto.ListCommunityDto;
 import com.devesta.blogify.community.domain.mapper.ListCommunityMapper;
 import com.devesta.blogify.exception.exceptions.*;
+import com.devesta.blogify.firebase.FileDAO;
 import com.devesta.blogify.post.PostRepository;
 import com.devesta.blogify.post.domain.ListPostDto;
 import com.devesta.blogify.post.domain.ListPostMapper;
@@ -18,11 +19,14 @@ import com.devesta.blogify.user.domain.User;
 import com.devesta.blogify.user.domain.userlist.SimpleUserMapper;
 import com.devesta.blogify.user.domain.userlist.UserDto;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +42,7 @@ public class CommunityService {
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
     private final PostRepository postRepository;
+    private final FileDAO fileDAO;
     private final ListPostMapper listPostMapper;
     private final SimpleUserMapper simpleUserMapper;
 
@@ -157,7 +162,12 @@ public class CommunityService {
     }
 
     public void deleteCommunity(Long cid, Authentication authentication) {
-        validateOwnerShip(cid, authentication, "User is not authorized to delete this community");
+        Community community = validateOwnerShip(cid, authentication, "User is not authorized to delete this community");
+
+        String oldImageUrl = community.getCommunityIconUrl();
+        if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+            fileDAO.deleteFileFromFirebase(oldImageUrl);
+        }
         communityRepository.deleteById(cid);
     }
 
@@ -167,8 +177,10 @@ public class CommunityService {
         User userToPromote = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("user to be promoted not found "));
 
-        community.getModerators().add(userToPromote);
-        communityRepository.save(community);
+        if (userRepository.alreadyJoined(userToPromote.getUserId(), communityId) != null) {
+            community.getModerators().add(userToPromote);
+            communityRepository.save(community);
+        }
     }
 
     public void removeModeratorFromCommunity(Long communityId, Long userId, Authentication authentication) {
@@ -188,12 +200,13 @@ public class CommunityService {
                 validateOwnerShip(communityId, authentication, "User is not authorized to banned a member");
         User userToBanned = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("user to be promoted not found "));
-
-        userToBanned.getJoinedCommunities().remove(community);
-        userRepository.save(userToBanned);
+        if (userToBanned.getJoinedCommunities().contains(community)) {
+            userToBanned.getJoinedCommunities().remove(community);
+            userRepository.save(userToBanned);
+        }
     }
 
-    private Community validateOwnerShip(Long cid, Authentication authentication, String authorizeMessage) {
+    private Community validateOwnerShip(Long cid, @NotNull Authentication authentication, String authorizeMessage) {
         Community community = communityRepository.findById(cid)
                 .orElseThrow(() -> new CommunityNotFoundException("community trying to modify not found"));
         User user = (User) authentication.getPrincipal();
@@ -209,5 +222,24 @@ public class CommunityService {
                 .stream()
                 .map(simpleUserMapper::userToUserDao)
                 .collect(Collectors.toList());
+    }
+
+    public String uploadCommunityIcon(Long cid, Authentication authentication, MultipartFile file) throws IOException {
+        String iconUrl = fileDAO.uploadAndGetUrl(file);
+        Community community =
+                validateOwnerShip(cid, authentication, "User is not authorized to change community icon");
+
+        String oldImageUrl = community.getCommunityIconUrl();
+        if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+            fileDAO.deleteFileFromFirebase(oldImageUrl);
+        }
+
+        community.setCommunityIconUrl(iconUrl);
+        communityRepository.save(community);
+        return iconUrl;
+    }
+
+    public String getCommunityIcon(Long cid) {
+        return communityRepository.findCommunityIconById(cid);
     }
 }

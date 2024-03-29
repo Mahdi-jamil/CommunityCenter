@@ -1,0 +1,12 @@
+22:03:47.778 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: getAllCommunities
+22:03:48.861 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with status code: 200 OK
+22:03:48.866 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with result: []
+22:05:22.544 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: getAllUsers
+22:05:22.926 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllUsers returned with status code: 200 OK
+22:05:22.926 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllUsers returned with result: [UserDto[userId=1, username=mahdi, image_url=https://firebasestorage.googleapis.com/v0/b/community-center-db.appspot.com/o/17056678-11a1-46c4-a882-90bd03a63f45.jpeg?alt=media, createdDate=2024-03-28]]
+22:12:21.478 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: login
+22:12:23.474 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method login returned with status code: 200 OK
+22:12:23.475 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method login returned with result: AuthenticationResponse(accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTczOTU0MiwiZXhwIjoxNzExNzQzMTQyfQ.3uBTzVoyIQOFiaRxkl-I7EPDKl8MKrjp-gGrn8ij81U, refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTczOTU0MywiZXhwIjoxNzExODI1OTQzfQ.PJxaL8tW7fuw1_rUnn4DIJSvuUy6Pg5mDx6zec2Ks6U)
+22:13:07.710 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: upload
+22:13:20.749 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method upload returned with status code: 200 OK
+22:13:20.749 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method upload returned with result: https://firebasestorage.googleapis.com/v0/b/community-center-db.appspot.com/o/4b4b7d5a-788b-4a90-b4e0-c1641b566ca6.jpeg?alt=media

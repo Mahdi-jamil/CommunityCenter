@@ -22,6 +22,13 @@ Posts:
 Features:
     1-Add community room for live chatting
     2-Add Oauth2
+        spring.security.oauth2.client.registration.google.client-id=822622505923-5bd6li4evqmc697ge9cekkuqmrag16s0.apps.googleusercontent.com
+        spring.security.oauth2.client.registration.google.client-secret=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
+        spring.security.oauth2.client.registration.google.scope=openid,profile,email
+
+        spring.security.oauth2.client.registration.github.client-id=Iv1.2fb13246f424dcf1
+        spring.security.oauth2.client.registration.github.client-secret=cedc0f3cbe9c1c3cddf3c738d73cfb30f6e54517
+
 
 
 Postgres :

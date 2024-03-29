@@ -1,7 +1,6 @@
 package com.devesta.blogify.security.config;
 
 import com.devesta.blogify.security.jwt.JwtAuthFilter;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,16 +10,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 @EnableWebSecurity
 @Configuration
@@ -31,6 +30,7 @@ public class SecurityConfig {
     private final AuthenticationProvider provider;
     private final AuthEntryPoint authenticationEntryPoint;
     private final PasswordEncoder passwordEncoder;
+    private final LogoutHandler logoutHandler;
 
     private static final String[] GENERAL_WHITELIST = {
             "/api/authentication/**",
@@ -43,18 +43,23 @@ public class SecurityConfig {
     private static final String[] GET_WHITELIST = {
             "/api/v1/comments/{commentId}",
             "/api/v1/comments/{postId}/{commentId}/replies",
+
             "/api/v1/communities",
             "/api/v1/communities/{cid}/posts",
             "/api/v1/communities/{cid}",
+            "/api/v1/communities/{cid}/icon",
             "/api/v1/communities/tags/{tagName}",
+
             "/api/v1/users/{uid}",
             "/api/v1/users",
-            "/api/v1/users/{username}",
+            "/api/v1/users/{uid}/profile",
             "/api/v1/users/{uid}/posts",
             "/api/v1/users/{uid}/communities",
             "/api/v1/users/{uid}/comments",
+
             "/api/v1/posts/{pid}",
             "/api/v1/posts/{pid}/comments",
+
             "/api/v1/search/posts/{title}",
             "/api/v1/search/people/{username}",
             "/api/v1/search/communities/{name}",
@@ -71,12 +76,19 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers(HttpMethod.GET,GET_WHITELIST).permitAll()
+                                .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
                                 .requestMatchers(GENERAL_WHITELIST).permitAll()
+                                .requestMatchers("/api/v1/expire_tokens").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .authenticationProvider(provider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout((logout) ->
+                        logout
+                                .addLogoutHandler(logoutHandler)
+                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+                                .logoutUrl("/api/authentication/logout")
+                )
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling
                                 .authenticationEntryPoint(authenticationEntryPoint)

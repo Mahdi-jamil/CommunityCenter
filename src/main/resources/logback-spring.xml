@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/default.xml"/>
+    <property name="CONSOLE_LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %-5level   %-40.40logger{39}           : %msg%n" />
+    <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <property name="ERROR_FILE" value="log/validate-error.log"/>
+    <property name="ASPECT_FILE" value="log/aspect-controller.log"/>
+
+
+    <appender name="VALIDATE_ERROR_FILE"
+              class="ch.qos.logback.core.FileAppender">
+        <file>${ERROR_FILE}</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${ERROR_FILE}.%i</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10KB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <appender name="CONTROLLER_ASPECT_FILE"
+              class="ch.qos.logback.core.FileAppender">
+        <file>${ASPECT_FILE}</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${ASPECT_FILE}.%i</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10KB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <logger name="com.devesta.blogify.exception.handlers" level="ERROR">
+        <appender-ref ref="VALIDATE_ERROR_FILE"/>
+    </logger>
+
+    <logger name="com.devesta.blogify.aop" level="INFO" >
+        <appender-ref ref="CONTROLLER_ASPECT_FILE"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
