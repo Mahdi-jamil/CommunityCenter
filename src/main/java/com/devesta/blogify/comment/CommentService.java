@@ -4,13 +4,12 @@ import com.devesta.blogify.comment.domain.Comment;
 import com.devesta.blogify.comment.domain.CommentBody;
 import com.devesta.blogify.comment.domain.CommentDto;
 import com.devesta.blogify.comment.domain.CommentMapper;
-import com.devesta.blogify.exception.exceptions.CommentNotFoundException;
-import com.devesta.blogify.exception.exceptions.PostNotFoundException;
+import com.devesta.blogify.exception.exceptions.notfound.CommentNotFoundException;
+import com.devesta.blogify.exception.exceptions.notfound.PostNotFoundException;
 import com.devesta.blogify.exception.exceptions.UnauthorizedAccessException;
 import com.devesta.blogify.post.PostRepository;
 import com.devesta.blogify.user.domain.User;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 

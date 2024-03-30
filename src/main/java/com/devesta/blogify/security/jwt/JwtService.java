@@ -1,5 +1,6 @@
 package com.devesta.blogify.security.jwt;
 
+import com.devesta.blogify.exception.exceptions.JwtParsingException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -23,7 +24,6 @@ public class JwtService {
 
     private final SecretKey SECRET_KEY = Jwts.SIG.HS256.key().build();
     private final long tokenExpiration = 60 * 1000 * 60; // hour
-    private final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
     public String extractUsername(String token) {
         return getClaim(token, Claims::getSubject);
@@ -37,7 +37,7 @@ public class JwtService {
         return buildToken(extraClaims, userDetails, tokenExpiration);
     }
 
-    public String generateRefreshToken( UserDetails userDetails) {
+    public String generateRefreshToken(UserDetails userDetails) {
         long refreshTokenExpiration = tokenExpiration * 24; // day
         return buildToken(new HashMap<>(), userDetails, refreshTokenExpiration);
     }
@@ -67,7 +67,7 @@ public class JwtService {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-
+        String exceptionDetail;
         try {
             return Jwts.parser()
                     .verifyWith(getSigningKey())
@@ -75,21 +75,18 @@ public class JwtService {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (ExpiredJwtException ex) {
-            logger.error("Expired token: {}", ex.getMessage());
+            exceptionDetail = "Expired token: " + ex.getMessage();
         } catch (MalformedJwtException ex) {
-            logger.error("Malformed JWT: {}", ex.getMessage());
+            exceptionDetail = "Malformed JWT: " + ex.getMessage();
         } catch (SignatureException ex) {
-            logger.error("Invalid JWT signature: {}", ex.getMessage());
+            exceptionDetail = "Invalid JWT signature: " + ex.getMessage();
         } catch (IllegalArgumentException ex) {
-            logger.error("Invalid JWT token: {}", ex.getMessage());
+            exceptionDetail = "Invalid JWT token: " + ex.getMessage();
         }
-        throw new AuthenticationException("Error parsing JWT -> Access Denied ") {
-        };
+        throw new JwtParsingException(exceptionDetail);
     }
 
     private SecretKey getSigningKey() {
         return SECRET_KEY;
-//        byte[] keyBytes = "khjvbakafldn487052nksvfojbhwndhkrgosvif".getBytes(StandardCharsets.UTF_8);
-//        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

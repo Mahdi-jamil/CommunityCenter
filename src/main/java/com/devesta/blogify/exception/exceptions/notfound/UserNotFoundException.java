@@ -1,6 +1,6 @@
-package com.devesta.blogify.exception.exceptions;
+package com.devesta.blogify.exception.exceptions.notfound;
 
-public class UserNotFoundException extends RuntimeException {
+public class UserNotFoundException extends NotFoundException {
     public UserNotFoundException(String message) {
         super(message);
     }

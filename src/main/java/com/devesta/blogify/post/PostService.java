@@ -2,7 +2,7 @@ package com.devesta.blogify.post;
 
 import com.devesta.blogify.comment.domain.CommentDto;
 import com.devesta.blogify.comment.domain.CommentMapper;
-import com.devesta.blogify.exception.exceptions.PostNotFoundException;
+import com.devesta.blogify.exception.exceptions.notfound.PostNotFoundException;
 import com.devesta.blogify.exception.exceptions.UnauthorizedAccessException;
 import com.devesta.blogify.post.domain.ListPostDto;
 import com.devesta.blogify.post.domain.Post;

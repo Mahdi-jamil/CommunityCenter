@@ -43,8 +43,6 @@ public class AuthenticationServiceTest {
     private JwtService jwtService;
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private TokenRepository tokenRepository;
 
     @InjectMocks
     private AuthenticationService authenticationService;

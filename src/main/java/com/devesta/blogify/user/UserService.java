@@ -5,7 +5,7 @@ import com.devesta.blogify.comment.domain.CommentDto;
 import com.devesta.blogify.comment.domain.CommentMapper;
 import com.devesta.blogify.community.domain.dto.ListCommunityDto;
 import com.devesta.blogify.community.domain.mapper.ListCommunityMapper;
-import com.devesta.blogify.exception.exceptions.UserNotFoundException;
+import com.devesta.blogify.exception.exceptions.notfound.UserNotFoundException;
 import com.devesta.blogify.firebase.FileDAO;
 import com.devesta.blogify.post.PostRepository;
 import com.devesta.blogify.post.domain.ListPostDto;

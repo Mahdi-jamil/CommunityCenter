@@ -1,19 +1,19 @@
 package com.devesta.blogify.exception.handlers;
 
-import com.devesta.blogify.exception.ErrorMessage;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ProblemDetail;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ValidationExceptionHandler {
@@ -21,33 +21,37 @@ public class ValidationExceptionHandler {
     Logger logger = LoggerFactory.getLogger(ValidationExceptionHandler.class);
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorMessage> handleValidationException(ConstraintViolationException exception) {
-        List<String> errors = new ArrayList<>();
+    public ProblemDetail handleValidationException(ConstraintViolationException exception) {
+        Map<String, Object> errors = exception.getConstraintViolations().stream()
+                .collect(Collectors.toMap(
+                        violation -> violation.getPropertyPath().toString(),
+                        ConstraintViolation::getMessage
+                ));
 
-        exception.getConstraintViolations().forEach((error) ->
-                errors.add(error.getMessage())
-        );
-
-        ErrorMessage errorDetails = new ErrorMessage(new Date(), "Not Valid Inputs",errors.toString());
-        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle("Not Valid Inputs");
+        problemDetail.setProperties(errors);
+        return problemDetail;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorMessage> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ProblemDetail handleValidationExceptions(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
-        List<String> errors = new ArrayList<>();
+        Map<String, Object> errors = new HashMap<>();
 
         result.getFieldErrors().forEach((error) ->
-                errors.add(error.getField() + ": " + error.getDefaultMessage())
+                errors.put(error.getField(), error.getDefaultMessage())
         );
         result.getGlobalErrors().forEach((error) ->
-                errors.add(error.getObjectName() + ": " + error.getDefaultMessage())
+                errors.put(error.getObjectName(), error.getDefaultMessage())
         );
 
         if (!errors.isEmpty())
             logger.error("Validation errors: " + errors);
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle("Not Valid Inputs");
+        problemDetail.setProperties(errors);
 
-        ErrorMessage errorDetails = new ErrorMessage(new Date(), "Not Valid Inputs",errors.toString());
-        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
+        return problemDetail;
     }
 }

@@ -53,6 +53,10 @@
         <appender-ref ref="CONTROLLER_ASPECT_FILE"/>
     </logger>
 
+    <logger name="ch.qos.logback" level="WARN" >
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
     </root>

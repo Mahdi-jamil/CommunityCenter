@@ -1,6 +1,6 @@
-package com.devesta.blogify.exception.exceptions;
+package com.devesta.blogify.exception.exceptions.notfound;
 
-public class FileNotFoundException extends RuntimeException{
+public class FileNotFoundException extends NotFoundException{
      public FileNotFoundException(String msg){
          super(msg);
      }

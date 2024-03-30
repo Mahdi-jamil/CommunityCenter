@@ -1,12 +1,35 @@
-22:03:47.778 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: getAllCommunities
-22:03:48.861 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with status code: 200 OK
-22:03:48.866 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with result: []
-22:05:22.544 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: getAllUsers
-22:05:22.926 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllUsers returned with status code: 200 OK
-22:05:22.926 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllUsers returned with result: [UserDto[userId=1, username=mahdi, image_url=https://firebasestorage.googleapis.com/v0/b/community-center-db.appspot.com/o/17056678-11a1-46c4-a882-90bd03a63f45.jpeg?alt=media, createdDate=2024-03-28]]
-22:12:21.478 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: login
-22:12:23.474 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method login returned with status code: 200 OK
-22:12:23.475 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method login returned with result: AuthenticationResponse(accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTczOTU0MiwiZXhwIjoxNzExNzQzMTQyfQ.3uBTzVoyIQOFiaRxkl-I7EPDKl8MKrjp-gGrn8ij81U, refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTczOTU0MywiZXhwIjoxNzExODI1OTQzfQ.PJxaL8tW7fuw1_rUnn4DIJSvuUy6Pg5mDx6zec2Ks6U)
-22:13:07.710 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: upload
-22:13:20.749 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method upload returned with status code: 200 OK
-22:13:20.749 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method upload returned with result: https://firebasestorage.googleapis.com/v0/b/community-center-db.appspot.com/o/4b4b7d5a-788b-4a90-b4e0-c1641b566ca6.jpeg?alt=media
+19:08:57.075 [http-nio-8080-exec-6] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: getAllCommunities
+19:08:57.090 [http-nio-8080-exec-6] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with status code: 200 OK
+19:08:57.090 [http-nio-8080-exec-6] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with result: [ListCommunityDto[id=3, name=string, description=string, numberOfMembers=1, communityIconUrl=null, tags=[TagDto[name=string]]], ListCommunityDto[id=4, name=strtnfging, description=string, numberOfMembers=1, communityIconUrl=null, tags=[TagDto[name=string]]]]
+19:09:35.584 [http-nio-8080-exec-10] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: getAllCommunities
+19:09:35.603 [http-nio-8080-exec-10] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with status code: 200 OK
+19:09:35.604 [http-nio-8080-exec-10] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with result: [ListCommunityDto[id=3, name=string, description=string, numberOfMembers=1, communityIconUrl=null, tags=[TagDto[name=string]]], ListCommunityDto[id=4, name=strtnfging, description=string, numberOfMembers=1, communityIconUrl=null, tags=[TagDto[name=string]]]]
+19:10:17.979 [http-nio-8080-exec-8] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: getAllCommunities
+19:10:18.002 [http-nio-8080-exec-8] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with status code: 200 OK
+19:10:18.003 [http-nio-8080-exec-8] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with result: [ListCommunityDto[id=3, name=string, description=string, numberOfMembers=1, communityIconUrl=null, tags=[TagDto[name=string]]], ListCommunityDto[id=4, name=strtnfging, description=string, numberOfMembers=1, communityIconUrl=null, tags=[TagDto[name=string]]]]
+23:02:17.023 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: getAllCommunities
+23:02:18.181 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with status code: 200 OK
+23:02:18.182 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getAllCommunities returned with result: [ListCommunityDto[id=3, name=string, description=string, numberOfMembers=1, communityIconUrl=null, tags=[TagDto[name=string]]], ListCommunityDto[id=4, name=strtnfging, description=string, numberOfMembers=1, communityIconUrl=null, tags=[TagDto[name=string]]]]
+23:02:39.999 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: login
+23:02:42.182 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method login returned with status code: 200 OK
+23:02:42.183 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method login returned with result: AuthenticationResponse(accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTgyODk2MSwiZXhwIjoxNzExODMyNTYxfQ.hWsltCHq-r7DzJvXU4FdozIGVwDDrfdAniD-CA88L5Y, refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTgyODk2MSwiZXhwIjoxNzExOTE1MzYxfQ.BpMX2NttTkiak48MPGx1RqMi4IvQ0AjMeKLN8ubZvq0)
+23:03:10.321 [http-nio-8080-exec-5] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: createNewCommunity
+23:03:10.608 [http-nio-8080-exec-5] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method createNewCommunity returned with status code: 201 CREATED
+23:03:10.609 [http-nio-8080-exec-5] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method createNewCommunity returned with result: CommunityDto[name=strtnfgfbeoning, description=string, tags=[TagDto[name=string]]]
+23:10:48.341 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: refresh
+23:10:48.350 [http-nio-8080-exec-3] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method refresh returned with result: null
+23:35:29.796 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: getCommunityPosts
+23:35:30.578 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getCommunityPosts returned with status code: 200 OK
+23:35:30.580 [http-nio-8080-exec-1] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method getCommunityPosts returned with result: []
+23:39:50.375 [http-nio-8080-exec-4] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: login
+23:39:52.259 [http-nio-8080-exec-4] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method login returned with status code: 200 OK
+23:39:52.264 [http-nio-8080-exec-4] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method login returned with result: AuthenticationResponse(accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTgzMTE5MSwiZXhwIjoxNzExODM0NzkxfQ.YaWYbPZOXCNObY1E1oHmCATLNq0RIrK9oFWRH83yVnU, refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTgzMTE5MSwiZXhwIjoxNzExOTE3NTkxfQ.shi1pihbb7cahzUjghLu4xKhqGX5FYmTfKTIFZzT7nA)
+23:40:18.394 [http-nio-8080-exec-6] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: createNewCommunity
+23:40:18.670 [http-nio-8080-exec-6] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method createNewCommunity returned with status code: 201 CREATED
+23:40:18.671 [http-nio-8080-exec-6] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method createNewCommunity returned with result: CommunityDto[name=strinvedsg, description=string, tags=[TagDto[name=string]]]
+23:56:22.155 [http-nio-8080-exec-2] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: login
+23:56:24.935 [http-nio-8080-exec-2] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method login returned with status code: 200 OK
+23:56:24.936 [http-nio-8080-exec-2] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method login returned with result: AuthenticationResponse(accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTgzMjE4NCwiZXhwIjoxNzExODM1Nzg0fQ.K-64cpGqSAHW09JXZLibMaEaNP8Hh-VyE1p0qKEQJFg, refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWhkaSIsImlhdCI6MTcxMTgzMjE4NCwiZXhwIjoxNzExOTE4NTg0fQ.vIx2wZJ4LxpgfVIZkJ2lpnvjSJoYO1Ag3zHSjGhlLA4)
+23:56:49.661 [http-nio-8080-exec-4] INFO  c.d.blogify.aop.GlobalLoggingAspect - Entering method: createNewCommunity
+23:56:49.810 [http-nio-8080-exec-4] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method createNewCommunity returned with status code: 201 CREATED
+23:56:49.810 [http-nio-8080-exec-4] INFO  c.d.blogify.aop.GlobalLoggingAspect - Method createNewCommunity returned with result: CommunityDto[name=strinvevdsg, description=string, tags=[TagDto[name=string]]]

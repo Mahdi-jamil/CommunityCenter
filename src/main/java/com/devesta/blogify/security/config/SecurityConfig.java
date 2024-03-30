@@ -1,7 +1,11 @@
 package com.devesta.blogify.security.config;
 
 import com.devesta.blogify.security.jwt.JwtAuthFilter;
-import lombok.RequiredArgsConstructor;
+import com.devesta.blogify.security.jwt.JwtService;
+import com.devesta.blogify.security.jwt.TokenRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,20 +21,28 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+
 
 @EnableWebSecurity
 @Configuration
-@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
+
     private final AuthenticationProvider provider;
-    private final AuthEntryPoint authenticationEntryPoint;
     private final PasswordEncoder passwordEncoder;
     private final LogoutHandler logoutHandler;
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
+    private final TokenRepository tokenRepository;
+    private final AccessDeniedHandlerImpl accessDeniedHandler;
+    private final AuthEntryPoint authEntryPoint;
+
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver handlerExceptionResolver;
 
     private static final String[] GENERAL_WHITELIST = {
             "/api/authentication/**",
@@ -38,6 +50,8 @@ public class SecurityConfig {
             "/v3/api-docs.yaml",
             "/swagger-ui/**",
             "/h2-console/**",
+            "/error",
+            "/error/accessDenied.html"
     };
 
     private static final String[] GET_WHITELIST = {
@@ -66,33 +80,48 @@ public class SecurityConfig {
             "/api/v1/search/comment/{body}"
     };
 
+    public SecurityConfig(AuthenticationProvider provider, PasswordEncoder passwordEncoder, LogoutHandler logoutHandler, JwtService jwtService, UserDetailsService userDetailsService, TokenRepository tokenRepository, AccessDeniedHandlerImpl accessDeniedHandler, AuthEntryPoint authEntryPoint) {
+        this.provider = provider;
+        this.passwordEncoder = passwordEncoder;
+        this.logoutHandler = logoutHandler;
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+        this.tokenRepository = tokenRepository;
+        this.accessDeniedHandler = accessDeniedHandler;
+        this.authEntryPoint = authEntryPoint;
+    }
+
+    @Bean
+    public JwtAuthFilter jwtAuthFilter() {
+        return new JwtAuthFilter(jwtService, userDetailsService, tokenRepository, handlerExceptionResolver);
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement((sessionManagement) -> {
-                    sessionManagement
-                            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                })
+                .sessionManagement((sessionManagement) -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers(HttpMethod.GET, GET_WHITELIST).permitAll()
                                 .requestMatchers(GENERAL_WHITELIST).permitAll()
-                                .requestMatchers("/api/v1/expire_tokens").hasAuthority("ADMIN")
+                                .requestMatchers("/api/v1/revoke_tokens").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .authenticationProvider(provider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .logout((logout) ->
                         logout
                                 .addLogoutHandler(logoutHandler)
                                 .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
                                 .logoutUrl("/api/authentication/logout")
-                )
-                .exceptionHandling((exceptionHandling) ->
-                        exceptionHandling
-                                .authenticationEntryPoint(authenticationEntryPoint)
-                                .accessDeniedHandler(new AccessDeniedHandlerImpl())
+                ).exceptionHandling((exception) ->
+                        exception
+                                .accessDeniedHandler(accessDeniedHandler) // 403
+                                .authenticationEntryPoint(authEntryPoint) // 401
                 );
 
         return http.build();

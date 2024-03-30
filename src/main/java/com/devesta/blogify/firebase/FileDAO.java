@@ -1,7 +1,7 @@
 package com.devesta.blogify.firebase;
 
 import com.devesta.blogify.exception.exceptions.BadRequestException;
-import com.devesta.blogify.exception.exceptions.FileNotFoundException;
+import com.devesta.blogify.exception.exceptions.notfound.FileNotFoundException;
 import com.google.cloud.storage.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package com.devesta.blogify.user;
 
-import com.devesta.blogify.exception.exceptions.UserNotFoundException;
+import com.devesta.blogify.exception.exceptions.notfound.UserNotFoundException;
 import com.devesta.blogify.user.domain.UpdatePayLoad;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
