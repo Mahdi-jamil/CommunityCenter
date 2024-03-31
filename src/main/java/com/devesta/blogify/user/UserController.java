@@ -63,7 +63,7 @@ public class UserController {
 
 
     @PatchMapping("/{uid}")
-    public ResponseEntity<UserDto> partialUpdate(
+    public ResponseEntity<FullDetailUser> partialUpdate(
             @RequestBody @Valid UpdatePayLoad updatePayLoad,
             @PathVariable Long uid
     ) {

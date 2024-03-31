@@ -92,7 +92,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDto partialUpdate(UpdatePayLoad updatePayLoad, Long uid) {
+    public FullDetailUser partialUpdate(UpdatePayLoad updatePayLoad, Long uid) {
         User user = userRepository.findById(uid)
                 .orElseThrow(() -> new UserNotFoundException("User not found for update"));
 
@@ -106,7 +106,7 @@ public class UserService {
         Optional.ofNullable(updatePayLoad.bio())
                 .ifPresent(user::setBio);
 
-        return simpleUserMapper.userToUserDao(userRepository.save(user));
+        return detailUserMapper.userToDetailUserDao(userRepository.save(user));
 
     }
 

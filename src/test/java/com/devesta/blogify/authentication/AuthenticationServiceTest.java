@@ -42,6 +42,8 @@ public class AuthenticationServiceTest {
     @Mock
     private JwtService jwtService;
     @Mock
+    private TokenRepository tokenRepository;
+    @Mock
     private UserRepository userRepository;
 
     @InjectMocks

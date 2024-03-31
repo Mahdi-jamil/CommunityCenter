@@ -123,10 +123,10 @@ public class UserControllerIntegrationTests {
     @Disabled
     public void testThatUserCanBeUpdated() throws Exception {
         UpdatePayLoad updatePayLoad = UpdatePayLoad.builder()
-                .email("jamilmahdi78@gmail.com")
+                .email("jamilmahdi77@gmail.com")
                 .password(null)
                 .build();
-        when(userService.partialUpdate(updatePayLoad, 1L)).thenReturn(utils.userDto1Updated);
+        when(userService.partialUpdate(updatePayLoad,1L)).thenReturn(utils.fullDetailUser);
 
         mockMvc.perform(
                 patch("/api/v1/users/{uid}", 1L)
@@ -136,7 +136,7 @@ public class UserControllerIntegrationTests {
         ).andExpect(
                 status().isOk()
         ).andExpect(
-                jsonPath("$.email").value("jamilmahdi78@gmail.com")
+                jsonPath("$.email").value("jamilmahdi77@gmail.com")
         );
 
         Mockito.verify(userService, times(1)).partialUpdate(updatePayLoad, 1L);
